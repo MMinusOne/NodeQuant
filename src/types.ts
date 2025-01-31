@@ -36,6 +36,16 @@ export enum TimeFrame {
     YEAR = '1Y' 
 }
 
+export interface BacktestResults { 
+  alpha: number;
+  beta: number;
+  shapeE: number;
+  maxDrawdown: number;
+  maxProfit: number;
+  profitFactor: number;
+  percentageProfitable: number;
+}
+
 export enum CryptoPair {
   BTCUSDT = "BTC/USDT",
   ETHUSDT = "ETH/USDT",
