@@ -7,6 +7,7 @@ export class Strategy {
   private strategyOptions: StrategyOptions;
   constructor(strategyOptions: StrategyOptions) {
     this.strategyOptions = strategyOptions;
+    this.installData();
   }
 
   private async installData() {

@@ -1,6 +1,6 @@
-# node-quant
+# Quant Zero
 
-node-quant is a powerful NPM package designed for developers and traders who want to create quantitative trading strategies for cryptocurrencies. With node-quant, you can easily implement and test various trading algorithms, analyze their performance, and obtain key metrics to make informed trading decisions.
+quant-zero is a powerful NPM package designed for developers and traders who want to create quantitative trading strategies for cryptocurrencies. With quant-zero, you can easily implement and test various trading algorithms, analyze their performance, and obtain key metrics to make informed trading decisions.
 
 ## Features
 
@@ -11,7 +11,7 @@ node-quant is a powerful NPM package designed for developers and traders who wan
 
 ## Installation
 
-To install node-quant, simply run:
+To install quant-zero, simply run:
 ```
-npm install node-quant
+npm install quant-zero
 ```
