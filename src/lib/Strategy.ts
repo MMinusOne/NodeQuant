@@ -14,13 +14,12 @@ export class Strategy {
     const { pairs, timeFrame, dataLength } = this.strategyOptions;
     const dataFolderPath = path.join(process.cwd(), "data");
 
-    // Create data folder if it doesn't exist
     if (!fs.existsSync(dataFolderPath)) {
       fs.mkdirSync(dataFolderPath);
     }
 
     for (const pair of pairs) {
-      const fileName = `${pair.replace("/", "_")}_${dataLength}.json`;
+      const fileName = `${pair.replace("/", "_")}_${dataLength}_${timeFrame}.json`;
       const filePath = path.join(dataFolderPath, fileName);
 
       if (fs.existsSync(filePath)) {
