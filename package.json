@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "ccxt": "^4.4.53",
+    "chalk": "^5.4.1",
     "technicalindicators": "^3.1.0"
   }
 }
