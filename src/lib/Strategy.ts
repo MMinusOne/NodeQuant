@@ -28,10 +28,10 @@ export class Strategy {
     }
   }
 
-  public backtest(simulationOptions?: SimulationOptions) {
-    const data = new this.strategyOptions.chartType(this.data);
+  public async backtest(simulationOptions?: SimulationOptions) {
+    const data = await this.strategyOptions.chartType.transform(this.data);
 
-    this.onStart(candle);
+    this.onStart(data);
 
     for (const candle of data) {
       this.onUpdate(candle);
@@ -40,9 +40,9 @@ export class Strategy {
     return {};
   }
 
-  protected onStart() {}
+  protected onStart(candles: OHLCV[]) {}
 
-  protected onUpdate() {}
+  protected onUpdate(candle: OHLCV) {}
 
   public exportTradeList() {}
 }

@@ -1,3 +1,4 @@
+import { Num } from "ccxt";
 import { ChartingSystem } from "./lib/ChartingSystem";
 import { Indicator } from "./lib/Indicator";
 
@@ -39,7 +40,7 @@ export enum TimeFrame {
 export interface BacktestResults { 
   alpha: number;
   beta: number;
-  shapeE: number;
+  sharpeE: number;
   maxDrawdown: number;
   maxProfit: number;
   profitFactor: number;
@@ -53,4 +54,13 @@ export enum CryptoPair {
   BNBUSDT = "BNB/USDT",
   LTCUSDT = "LTC/USDT",
   DOGEUSDT = "DOGE/USDT"
+}
+
+export interface CandleStickObject { 
+  open?: Num;
+  high?: Num;
+  low?: Num;
+  close?: Num;
+  volume?: Num;
+  timestamp?: Num;
 }
