@@ -1,16 +1,25 @@
 import fs from "fs";
 import path from "path";
 import exchange from "../exchange";
-import { SimulationOptions, StrategyOptions } from "../types";
+import { SimulationOptions, StrategyOptions, TimeFrame } from "../types";
 import { OHLCV } from "ccxt";
 import installData from "../utils/dataInstaller";
+import { ChartingSystem } from "./ChartingSystems";
 
 export class Strategy {
   private strategyOptions: StrategyOptions;
   private data: OHLCV[] = [];
 
   constructor(strategyOptions: StrategyOptions) {
-    this.strategyOptions = strategyOptions;
+    this.strategyOptions = {
+      ...strategyOptions,
+      name: strategyOptions.name || "Default Strategy",
+      dataLength: strategyOptions.dataLength ?? 100,
+      timeFrame: strategyOptions.timeFrame ?? TimeFrame.MINUTE,
+      chartType: strategyOptions.chartType ?? new ChartingSystem.CandleSticks(),
+      indicators: strategyOptions.indicators || [],
+      simulationOptions: strategyOptions.simulationOptions || {}
+    };
     this.installData();
   }
 
@@ -22,10 +31,10 @@ export class Strategy {
       fs.mkdirSync(dataFolderPath);
     }
 
-    for (const pair of pairs) {
-      const data = await installData(pair, timeFrame, dataLength);
-      this.data.push(...data);
-    }
+    const dataPromises = pairs.map((pair) =>
+      installData(pair, timeFrame, dataLength)
+    );
+    this.data = (await Promise.all(dataPromises)).flat();
   }
 
   public async backtest(simulationOptions?: SimulationOptions) {
