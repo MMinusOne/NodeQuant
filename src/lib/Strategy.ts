@@ -7,7 +7,7 @@ import {
   TimeFrame,
 } from '@/types'
 import { OHLCV } from 'ccxt'
-import installData from '@/utils/dataInstaller'
+import downloadPairData from '@/utils/dataInstaller'
 import { CandleSticks } from '@/ChartingSystems'
 import { TimelineManager } from '@/managers/TimelineManager'
 import { TradeManager } from '@/managers/TradeManager'
@@ -39,11 +39,11 @@ export class Strategy {
       pairs,
     }
     this.indicators = new TimelineManager(indicators)
-    this.installData()
+    this.downloadAllPairData()
   }
 
   // Installs the crypto pair data this strategy works on
-  public async installData() {
+  private async downloadAllPairData() {
     const { pairs, timeFrame, dataLength } = this.strategyOptions
     const dataFolderPath = path.join(process.cwd(), 'data')
 
@@ -51,7 +51,7 @@ export class Strategy {
 
     await Promise.all(
       pairs.map(async (pair) => {
-        const data = await installData(pair, timeFrame, dataLength)
+        const data = await downloadPairData(pair, timeFrame, dataLength)
         this.dataProfiles.push({
           pair,
           timeframe: this.strategyOptions.timeFrame,

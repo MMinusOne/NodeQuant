@@ -4,7 +4,7 @@ import { CryptoPair, TimeFrame } from '../types';
 const dataFolderPath = path.join(process.cwd(), "data");
 import exchange from '../exchange';
 
-export default async function installData(pair: CryptoPair, timeFrame: TimeFrame, dataLength: number) {
+export default async function downloadPairData(pair: CryptoPair, timeFrame: TimeFrame, dataLength: number) {
     const fileName = `${pair.replace("/", "_")}_${dataLength}_${timeFrame}.json`;
     const filePath = path.join(dataFolderPath, fileName);
 
