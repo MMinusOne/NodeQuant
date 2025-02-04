@@ -1,36 +1,81 @@
 import { TimeLineEvents } from '@/types'
 import { EventEmitter } from 'events'
 
+interface TimeLineManagerSystem extends EventEmitter {
+  name: string
+  generate: () => any
+}
+
+interface TimelineProfile {
+  key: string
+  data: []
+}
+
 export class TimelineManager {
-  private system: EventEmitter
-  private data: any[] = []
-  constructor(system: EventEmitter) {
-    this.system = system
+  private systems: TimeLineManagerSystem[]
+  private timelineProfiles: TimelineProfile[] = []
+  
+  constructor(systems: TimeLineManagerSystem[]) {
+    this.systems = systems
 
-    this.system.on(TimeLineEvents.GENERATED, (generated: any[]) => {
-      this.data.push(generated)
-    })
+    const setData = async (system: TimeLineManagerSystem) => {
+      const data = await system.generate()
+      const profile = this.getProfile(system.name)
+      if (!profile) return
+      if (!profile.data) {
+        profile.data = []
+      }
+      profile.data = data
+    }
+
+    for (const system of this.systems) {
+      system.on(TimeLineEvents.FED, setData)
+      system.on(TimeLineEvents.PROVIDED, setData)
+    }
+
   }
 
-  protected getLast() {
-    return this.data.at(-1)
+  private getSystem(key: string): TimeLineManagerSystem | null {
+    return this.systems.find((system) => system.name === key) || null
   }
-  protected getSecondLast() {
-    return this.data.at(-2)
+
+  private getProfile(key: string): TimelineProfile | null {
+    return this.timelineProfiles.find((profile) => profile.key === key) || null
   }
-  protected getFirst() {
-    return this.data.at(0)
+
+  protected getData(key: string, index: number) {
+    const profile = this.getProfile(key)
+    if (!profile || !profile.data) return null
+    return profile.data.at(index)
   }
-  protected getSecondFirst() {
-    return this.data.at(1)
+
+  protected getLast(key: string) {
+    return this.getData(key, -1)
   }
-  protected getAt(index: number) {
-    return this.data.at(index)
+  
+  protected getSecondLast(key: string) {
+    return this.getData(key, -2)
   }
-  protected all() {
-    return this.data
+  
+  protected getFirst(key: string) {
+    return this.getData(key, 0)
   }
-  protected getSize() {
-    return this.data.length
+  
+  protected getSecondFirst(key: string) {
+    return this.getData(key, 1)
+  }
+  
+  protected getAt(key: string, index: number) {
+    return this.getData(key, index)
+  }
+  
+  protected all(key: string) {
+    const profile = this.getProfile(key)
+    return profile ? profile.data : null
+  }
+  
+  protected getSize(key: string) {
+    const profile = this.getProfile(key)
+    return profile ? profile.data.length : 0
   }
 }

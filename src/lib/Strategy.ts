@@ -14,7 +14,7 @@ import { TimelineManager } from '@/managers/TimelineManager'
 export class Strategy {
   private dataProfiles: StrategyData[] = []
   private strategyOptions: StrategyOptions
-  protected indicators: TimelineManager[] = []
+  protected indicators: TimelineManager
 
   constructor(strategyOptions: StrategyOptions) {
     this.strategyOptions = {
@@ -29,10 +29,7 @@ export class Strategy {
 
     this.installData()
 
-    this.indicators =
-      this.strategyOptions.indicators?.map(
-        (indicator) => new TimelineManager(indicator),
-      ) ?? []
+    this.indicators = new TimelineManager(this.strategyOptions.indicators)
   }
 
   // Installs the crypto pair data this strategy works on
