@@ -77,3 +77,15 @@ export interface IndicatorOptions {
   description: string
   indicators?: Indicator[]
 }
+
+export type TimelineEventsInterface = {
+  provided: (data: any[]) => any[]
+  fed: (data: any) => any
+  generated: () => any[]
+}
+
+export enum TimeLineEvents {
+  PROVIDED = "provided",
+  FED = "fed",
+  GENERATED = "generated",
+}

@@ -13,22 +13,29 @@ import { TimelineManager } from '@/managers/TimelineManager'
 
 export class Strategy {
   private dataProfiles: StrategyData[] = []
-  private strategyOptions: StrategyOptions;
-  protected indicators: TimelineManager[] = [];
+  private strategyOptions: StrategyOptions
+  protected indicators: TimelineManager[] = []
 
   constructor(strategyOptions: StrategyOptions) {
     this.strategyOptions = {
       ...strategyOptions,
-      name: strategyOptions.name || 'Default Strategy',
+      name: strategyOptions.name,
       dataLength: strategyOptions.dataLength ?? 100,
       timeFrame: strategyOptions.timeFrame ?? TimeFrame.MINUTE,
       chartType: strategyOptions.chartType ?? new CandleSticks(),
       indicators: strategyOptions.indicators ?? [],
       simulationOptions: strategyOptions.simulationOptions,
     }
+
     this.installData()
+
+    this.indicators =
+      this.strategyOptions.indicators?.map(
+        (indicator) => new TimelineManager(indicator),
+      ) ?? []
   }
 
+  // Installs the crypto pair data this strategy works on
   private async installData() {
     const { pairs, timeFrame, dataLength } = this.strategyOptions
     const dataFolderPath = path.join(process.cwd(), 'data')
@@ -49,6 +56,7 @@ export class Strategy {
     )
   }
 
+  // Backtesting system to simulate trades
   public async backtest(simulationOptions: SimulationOptions) {
     const { pair } = simulationOptions
 
@@ -62,9 +70,9 @@ export class Strategy {
 
     if (!dataProfile) return
 
-    const { data } = dataProfile;
+    const { data } = dataProfile
 
-    this.onStart(data);
+    this.onStart(data)
   }
 
   protected onStart(candles: OHLCV[]): any {}
