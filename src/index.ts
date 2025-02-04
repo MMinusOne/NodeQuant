@@ -1,5 +1,5 @@
-import { Strategy } from "./lib/Strategy";
-import { Indicator } from "./lib/Indicator";
-import { ChartingSystem } from "./lib/ChartingSystems";
+import { Strategy } from './lib/Strategy'
+import { Indicator } from './lib/Indicator'
+import { ChartingSystem } from './ChartingSystems'
 
-export { Strategy, Indicator, ChartingSystem };
+export { Strategy, Indicator, ChartingSystem }

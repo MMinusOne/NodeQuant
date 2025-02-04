@@ -1,14 +1,20 @@
 import fs from 'fs'
 import path from 'path'
-import exchange from '../exchange'
-import { SimulationOptions, StrategyOptions, TimeFrame } from '../types'
+import {
+  SimulationOptions,
+  StrategyData,
+  StrategyOptions,
+  TimeFrame,
+} from '../types'
 import { OHLCV } from 'ccxt'
 import installData from '../utils/dataInstaller'
-import { ChartingSystem, CandleSticks } from './ChartingSystems'
+import { CandleSticks } from '../ChartingSystems'
+import { TimelineManager } from '@/managers/TimelineManager'
 
 export class Strategy {
-  private strategyOptions: StrategyOptions
-  private data: OHLCV[] = []
+  private dataProfiles: StrategyData[] = []
+  private strategyOptions: StrategyOptions;
+  protected indicators: TimelineManager[] = [];
 
   constructor(strategyOptions: StrategyOptions) {
     this.strategyOptions = {
@@ -17,8 +23,8 @@ export class Strategy {
       dataLength: strategyOptions.dataLength ?? 100,
       timeFrame: strategyOptions.timeFrame ?? TimeFrame.MINUTE,
       chartType: strategyOptions.chartType ?? new CandleSticks(),
-      indicators: strategyOptions.indicators || [],
-      simulationOptions: strategyOptions.simulationOptions || {},
+      indicators: strategyOptions.indicators ?? [],
+      simulationOptions: strategyOptions.simulationOptions,
     }
     this.installData()
   }
@@ -31,27 +37,37 @@ export class Strategy {
       fs.mkdirSync(dataFolderPath)
     }
 
-    const dataPromises = pairs.map((pair) =>
-      installData(pair, timeFrame, dataLength),
+    await Promise.all(
+      pairs.map(async (pair) => {
+        const data = await installData(pair, timeFrame, dataLength)
+        this.dataProfiles.push({
+          pair,
+          timeframe: this.strategyOptions.timeFrame,
+          data,
+        })
+      }),
     )
-    this.data = (await Promise.all(dataPromises)).flat()
   }
 
-  public async backtest(simulationOptions?: SimulationOptions) {
-    // const data = await this.strategyOptions.chartType.transform(this.data)
+  public async backtest(simulationOptions: SimulationOptions) {
+    const { pair } = simulationOptions
 
-    // this.onStart(data)
+    if (!this.strategyOptions.pairs.includes(pair)) return
 
-    // for (const candle of data) {
-    //   this.onUpdate(candle)
-    // }
+    const dataProfile = this.dataProfiles.find(
+      (bucket) =>
+        bucket.pair === pair &&
+        bucket.timeframe === this.strategyOptions.timeFrame,
+    )
 
-    // return {}
+    if (!dataProfile) return
+
+    const { data } = dataProfile;
+
+    this.onStart(data);
   }
 
-  protected onStart(candles: OHLCV[]) {}
+  protected onStart(candles: OHLCV[]): any {}
 
-  protected onUpdate(candle: OHLCV) {}
-
-  public exportTradeList() {}
+  // protected onUpdate(candle: OHLCV, candles: OHLCV[]): any {}
 }
