@@ -17,19 +17,27 @@ export class Strategy {
   protected indicators: TimelineManager
 
   constructor(strategyOptions: StrategyOptions) {
+    const {
+      name,
+      dataLength = 100,
+      timeFrame = TimeFrame.MINUTE,
+      chartType = new CandleSticks(),
+      indicators = [],
+      simulationOptions,
+      pairs,
+    } = strategyOptions
+
     this.strategyOptions = {
-      ...strategyOptions,
-      name: strategyOptions.name,
-      dataLength: strategyOptions.dataLength ?? 100,
-      timeFrame: strategyOptions.timeFrame ?? TimeFrame.MINUTE,
-      chartType: strategyOptions.chartType ?? new CandleSticks(),
-      indicators: strategyOptions.indicators ?? [],
-      simulationOptions: strategyOptions.simulationOptions,
+      name,
+      dataLength,
+      timeFrame,
+      chartType,
+      indicators,
+      simulationOptions,
+      pairs,
     }
-
+    this.indicators = new TimelineManager(indicators)
     this.installData()
-
-    this.indicators = new TimelineManager(this.strategyOptions.indicators)
   }
 
   // Installs the crypto pair data this strategy works on
@@ -37,9 +45,7 @@ export class Strategy {
     const { pairs, timeFrame, dataLength } = this.strategyOptions
     const dataFolderPath = path.join(process.cwd(), 'data')
 
-    if (!fs.existsSync(dataFolderPath)) {
-      fs.mkdirSync(dataFolderPath)
-    }
+    if (!fs.existsSync(dataFolderPath)) fs.mkdirSync(dataFolderPath)
 
     await Promise.all(
       pairs.map(async (pair) => {
@@ -54,9 +60,7 @@ export class Strategy {
   }
 
   // Backtesting system to simulate trades
-  public async backtest(simulationOptions: SimulationOptions) {
-    const { pair } = simulationOptions
-
+  public async backtest({ pair }: SimulationOptions) {
     if (!this.strategyOptions.pairs.includes(pair)) return
 
     const dataProfile = this.dataProfiles.find(
@@ -65,14 +69,11 @@ export class Strategy {
         bucket.timeframe === this.strategyOptions.timeFrame,
     )
 
-    if (!dataProfile) return
+    if (!dataProfile) return;
 
-    const { data } = dataProfile
-
-    this.onStart(data)
+    this.onStart(dataProfile.data);
   }
 
-  protected onStart(candles: OHLCV[]): any {}
-
-  // protected onUpdate(candle: OHLCV, candles: OHLCV[]): any {}
+  protected onStart(candles: OHLCV[]): void {}
+  // protected onUpdate(candle: OHLCV, candles: OHLCV[]): void {}
 }

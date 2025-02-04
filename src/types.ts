@@ -1,6 +1,7 @@
 import { Num, OHLCV } from 'ccxt'
 import { ChartingSystem } from './ChartingSystems'
 import { Indicator } from './lib/Indicator'
+import { EventEmitter } from 'events'
 
 export interface StrategyOptions {
   name: string
@@ -84,8 +85,19 @@ export type TimelineEventsInterface = {
   generated: () => any[]
 }
 
-export enum TimeLineEvents {
+export enum TimelineEvents {
   PROVIDED = "provided",
   FED = "fed",
   GENERATED = "generated",
+}
+
+
+export interface TimelineManagerSystem extends EventEmitter {
+  name: string
+  generate: () => any
+}
+
+export interface TimelineProfile {
+  key: string
+  data: []
 }
