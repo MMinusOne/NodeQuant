@@ -1,30 +1,35 @@
-import fs from 'fs';
-import path from 'path';
-import { CryptoPair, TimeFrame } from '../types';
-const dataFolderPath = path.join(process.cwd(), "data");
-import exchange from '../exchange';
+import fs from 'fs'
+import path from 'path'
+import { CryptoPair, TimeFrame } from '@/types'
+import exchange from '@/exchange'
 
-export default async function downloadPairData(pair: CryptoPair, timeFrame: TimeFrame, dataLength: number) {
-    const fileName = `${pair.replace("/", "_")}_${dataLength}_${timeFrame}.json`;
-    const filePath = path.join(dataFolderPath, fileName);
+const dataFolderPath = path.join(process.cwd(), 'data')
 
-    if (fs.existsSync(filePath)) {
-      console.log(
-        `Data for ${pair} with length ${dataLength} already exists. Skipping fetch.`
-      );
-    }
+export default async function downloadPairData(
+  pair: CryptoPair,
+  timeFrame: TimeFrame,
+  dataLength: number,
+) {
+  const fileName = `${pair.replace('/', '_')}_${dataLength}_${timeFrame}.json`
+  const filePath = path.join(dataFolderPath, fileName)
 
-    console.log(`Installing ${dataLength} candles for ${pair}.`);
-    const fetchedData = await exchange.fetchOHLCV(
-      pair,
-      timeFrame,
-      undefined,
-      dataLength,
-      {
-        paginate: true
-      }
-    );
+  if (fs.existsSync(filePath)) {
+    console.log(
+      `Data for ${pair} with length ${dataLength} already exists. Skipping fetch.`,
+    )
+  }
 
-    fs.writeFileSync(filePath, JSON.stringify(fetchedData, null, 2));
-    return fetchedData;
- }
+  console.log(`Installing ${dataLength} candles for ${pair}.`)
+  const fetchedData = await exchange.fetchOHLCV(
+    pair,
+    timeFrame,
+    undefined,
+    dataLength,
+    {
+      paginate: true,
+    },
+  )
+
+  fs.writeFileSync(filePath, JSON.stringify(fetchedData, null, 2))
+  return fetchedData
+}

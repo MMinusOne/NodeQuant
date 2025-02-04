@@ -1,5 +1,5 @@
 import { Num, OHLCV } from "ccxt";
-import { CandleStickObject } from "../types";
+import { CandleStickObject } from "@/types";
 
 export const parseIntoObject = (rawData: OHLCV[]) => {
   const candlesticks: CandleStickObject[] = [];

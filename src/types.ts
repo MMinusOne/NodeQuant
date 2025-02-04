@@ -1,6 +1,6 @@
 import { Num, OHLCV } from 'ccxt'
-import { ChartingSystem } from './ChartingSystems/ChartingSystem'
-import { Indicator } from './lib/Indicator'
+import { ChartingSystem } from '@/ChartingSystems/ChartingSystem'
+import { Indicator } from '@/lib/Indicator'
 import { EventEmitter } from 'events'
 
 export interface StrategyOptions {
