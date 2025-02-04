@@ -69,11 +69,18 @@ export class Strategy {
         bucket.timeframe === this.strategyOptions.timeFrame,
     )
 
-    if (!dataProfile) return;
+    if (!dataProfile) return
 
-    this.onStart(dataProfile.data);
+    const { data } = dataProfile
+
+    this.onStart(data)
+
+    for (const update of data) {
+      this.onUpdate(update, data)
+    }
   }
 
   protected onStart(candles: OHLCV[]): void {}
-  // protected onUpdate(candle: OHLCV, candles: OHLCV[]): void {}
+
+  protected onUpdate(candle: OHLCV, candles: OHLCV[]): void {}
 }
