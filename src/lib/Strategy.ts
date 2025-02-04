@@ -5,10 +5,10 @@ import {
   StrategyData,
   StrategyOptions,
   TimeFrame,
-} from '../types'
+} from '@/types'
 import { OHLCV } from 'ccxt'
-import installData from '../utils/dataInstaller'
-import { CandleSticks } from '../ChartingSystems'
+import installData from '@/utils/dataInstaller'
+import { CandleSticks } from '@/ChartingSystems'
 import { TimelineManager } from '@/managers/TimelineManager'
 import { TradeManager } from '@/managers/TradeManager'
 
@@ -43,7 +43,7 @@ export class Strategy {
   }
 
   // Installs the crypto pair data this strategy works on
-  private async installData() {
+  public async installData() {
     const { pairs, timeFrame, dataLength } = this.strategyOptions
     const dataFolderPath = path.join(process.cwd(), 'data')
 
@@ -63,18 +63,24 @@ export class Strategy {
 
   // Backtesting system to simulate trades
   public async backtest({ pair }: SimulationOptions) {
+    console.log(this.strategyOptions.pairs, pair)
     if (!this.strategyOptions.pairs.includes(pair)) return
 
+    console.log(this.dataProfiles);
+    console.log(this.strategyOptions.timeFrame)
+
     const dataProfile = this.dataProfiles.find(
-      (bucket) =>
-        bucket.pair === pair &&
-        bucket.timeframe === this.strategyOptions.timeFrame,
+      (profile) =>
+        profile.pair === pair &&
+        profile.timeframe === this.strategyOptions.timeFrame,
     )
 
+    
+    console.log(dataProfile)
     if (!dataProfile) return
 
     const { data } = dataProfile
-
+    console.log(this.onStart)
     this.onStart(data)
 
     for (const update of data) {
