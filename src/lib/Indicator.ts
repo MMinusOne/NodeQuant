@@ -7,13 +7,15 @@ import {
 import { OHLCV } from 'ccxt'
 
 export class Indicator extends EventEmitter {
-  private data: OHLCV[] = []
+  protected data: OHLCV[] = []
   public name: string
+  public key: string;
   public description: string
 
-  constructor({ name, description }: IndicatorOptions) {
+  constructor({ name, key, description }: IndicatorOptions) {
     super()
     this.name = name
+    this.key = key;
     this.description = description
   }
 
@@ -32,8 +34,8 @@ export class Indicator extends EventEmitter {
   }
 
   // Generates the result
-  public generate() {
-    return null
+  public generate(): any {
+    return null;
   }
 
   on<K extends keyof TimelineEventsInterface>(

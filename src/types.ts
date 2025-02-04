@@ -76,6 +76,7 @@ export interface StrategyData {
 export interface IndicatorOptions {
   name: string
   description: string
+  key: string
   indicators?: Indicator[]
 }
 
@@ -93,7 +94,7 @@ export enum TimelineEvents {
 
 
 export interface TimelineManagerSystem extends EventEmitter {
-  name: string
+  key: string
   generate: () => any
 }
 

@@ -9,7 +9,7 @@ export class TimelineManager {
 
     const setData = async (system: TimelineManagerSystem) => {
       const data = await system.generate()
-      const profile = this.getProfile(system.name)
+      const profile = this.getProfile(system.key)
       if (!profile) return
       if (!profile.data) {
         profile.data = []
@@ -24,7 +24,7 @@ export class TimelineManager {
   }
 
   private getSystem(key: string): TimelineManagerSystem | null {
-    return this.systems.find((system) => system.name === key) || null
+    return this.systems.find((system) => system.key === key) || null
   }
 
   private getProfile(key: string): TimelineProfile | null {

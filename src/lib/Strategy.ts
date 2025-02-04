@@ -10,11 +10,13 @@ import { OHLCV } from 'ccxt'
 import installData from '../utils/dataInstaller'
 import { CandleSticks } from '../ChartingSystems'
 import { TimelineManager } from '@/managers/TimelineManager'
+import { TradeManager } from '@/managers/TradeManager'
 
 export class Strategy {
   private dataProfiles: StrategyData[] = []
   private strategyOptions: StrategyOptions
   protected indicators: TimelineManager
+  public tradeManager: TradeManager = new TradeManager()
 
   constructor(strategyOptions: StrategyOptions) {
     const {
@@ -80,7 +82,7 @@ export class Strategy {
     }
   }
 
-  protected onStart(candles: OHLCV[]): void {}
+  protected onStart(updates: OHLCV[]): void {}
 
-  protected onUpdate(candle: OHLCV, candles: OHLCV[]): void {}
+  protected onUpdate(update: OHLCV, updates: OHLCV[]): void {}
 }
