@@ -87,11 +87,10 @@ export type TimelineEventsInterface = {
 }
 
 export enum TimelineEvents {
-  PROVIDED = "provided",
-  FED = "fed",
-  GENERATED = "generated",
+  PROVIDED = 'provided',
+  FED = 'fed',
+  GENERATED = 'generated',
 }
-
 
 export interface TimelineManagerSystem extends EventEmitter {
   key: string
@@ -101,4 +100,30 @@ export interface TimelineManagerSystem extends EventEmitter {
 export interface TimelineProfile {
   key: string
   data: []
+}
+
+export enum PositionType {
+  LONG = 'long',
+  SHORT = 'short',
+}
+
+export enum OrderType {
+  MARKET = 'market',
+  LIMIT = 'limit',
+  STOP = 'stop',
+}
+
+export interface CreateTradeOptions {
+  positionType: PositionType
+  orderType: OrderType
+  size: number;
+  limitPrice?: number;
+  riskOptions?: {
+    TP?: number;
+    SL?: number;
+  }
+}
+
+export interface TradeOptions { 
+  
 }
