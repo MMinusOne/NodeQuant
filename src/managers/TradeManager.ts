@@ -13,9 +13,6 @@ export class TradeManager {
   protected getTrades(): Trade[] {
     return []
   }
-  // protected getTrade(): Trade {
-
-  // }
   protected createTrade(options: CreateTradeOptions) {}
   protected closeTrade(tradeOrTradeId: Trade | string) {}
 }
