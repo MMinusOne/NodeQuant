@@ -116,14 +116,28 @@ export enum OrderType {
 export interface CreateTradeOptions {
   positionType: PositionType
   orderType: OrderType
-  size: number;
-  limitPrice?: number;
+  size: number
+  limitPrice?: number
   riskOptions?: {
-    TP?: number;
-    SL?: number;
+    TP?: number
+    SL?: number
   }
 }
 
-export interface TradeOptions { 
-  
+export interface TradeOptions {}
+
+export interface TradeConclusionData {}
+
+export interface TradeLiveData {
+  isOpen: boolean
+  isClosed: boolean
+  PL: number
+  openPrice: undefined
+  closePrice: undefined
+  fee?: number,
+}
+
+export enum NumberReturnType {
+  RELATIVE = 'relative',
+  FIXED = 'fixed',
 }

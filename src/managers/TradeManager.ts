@@ -1,17 +1,21 @@
 import { CreateTradeOptions } from '@/types'
 import { Trade } from '@/lib/Trade'
+import { Strategy } from '@/lib/Strategy'
 
 export class TradeManager {
   private trades = new Map<string, Trade>()
 
-  constructor() {}
+  constructor(strategy: Strategy) {}
 
-//   protected getTrade(): Trade {
-//     return new Trade()
-//   }
+  //   protected getTrade(): Trade {
+  //     return new Trade()
+  //   }
   protected getTrades(): Trade[] {
     return []
   }
+  // protected getTrade(): Trade {
+
+  // }
   protected createTrade(options: CreateTradeOptions) {}
-  protected closeTrade() {}
+  protected closeTrade(tradeOrTradeId: Trade | string) {}
 }

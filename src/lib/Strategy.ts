@@ -16,7 +16,7 @@ export class Strategy {
   private dataProfiles: StrategyData[] = []
   private strategyOptions: StrategyOptions
   protected indicators: TimelineManager
-  public tradeManager: TradeManager = new TradeManager()
+  public tradeManager: TradeManager = new TradeManager(this)
 
   constructor(strategyOptions: StrategyOptions) {
     const {
