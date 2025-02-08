@@ -49,19 +49,19 @@ export class Trade {
     this.tradeData.set(TRADE_KEY.SL, SL)
   }
 
-  public getData() {
-    return Object.fromEntries(this.tradeData)
+  public getData(): TradeData {
+    return Object.fromEntries(this.tradeData) as TradeData
   }
 
-  public onUpdate(update: OHLCV) {
-    const close = update.at(4)
+  public onUpdate(update: OHLCV, updates: OHLCV[]) {
+    const currentClose = update.at(4)
     const open = this.tradeData.get(TRADE_KEY.openPrice)
     const positionType = this.tradeData.get(TRADE_KEY.positionType)
-    if (open && close) {
+    if (open && currentClose) {
       const pl =
         positionType === PositionType.LONG
-          ? 100 * ((close - open) / open)
-          : 100 * ((open - close) / open)
+          ? 100 * ((currentClose - open) / open)
+          : 100 * ((open - currentClose) / open)
       this.tradeData.set(TRADE_KEY.PL, pl)
     }
   }

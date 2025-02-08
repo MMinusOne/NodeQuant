@@ -1,10 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import {
-  SimulationOptions,
-  StrategyOptions,
-  TimeFrame,
-} from '@/types'
+import { SimulationOptions, StrategyOptions, TimeFrame } from '@/types'
 import { OHLCV } from 'ccxt'
 import downloadPairData from '@/utils/dataInstaller'
 import { CandleSticks } from '@/ChartingSystems'

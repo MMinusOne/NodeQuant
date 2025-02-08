@@ -1,4 +1,4 @@
-import { CreateTradeOptions } from '@/types'
+import { CreateTradeOptions, TRADE_KEY } from '@/types'
 import { Trade } from '@/lib/Trade'
 import { Strategy } from '@/lib/Strategy'
 import { OHLCV } from 'ccxt'
@@ -11,13 +11,17 @@ export class TradeManager {
     this.strategy = strategy
   }
 
-  //   protected getTrade(): Trade {
-  //     return new Trade()
-  //   }
-  public onUpdate(update: OHLCV, updates: OHLCV[]) {}
-  protected getTrades(): Trade[] {
-    return []
+  protected getTrade(id: string): Trade | null {
+    return this.trades.get(id) || null
   }
+
+  public onUpdate(update: OHLCV, updates: OHLCV[]) {
+    for (const trade of this.trades.values()) {
+      if (!trade.getData()[TRADE_KEY.isClosed]) continue
+      trade.onUpdate(update, updates)
+    }
+  }
+
   protected createTrade(options: CreateTradeOptions): Trade {
     const trade = new Trade({
       orderType: options.orderType,
@@ -31,7 +35,11 @@ export class TradeManager {
       isLive: false,
     })
 
+    this.trades.set(trade.id, trade)
     return trade
   }
-  protected closeTrade(tradeOrTradeId: Trade | string) {}
+
+  protected closeTrade(tradeId: string) {
+    this.getTrade(tradeId)?.close()
+  }
 }
