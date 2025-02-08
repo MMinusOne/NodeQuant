@@ -18,6 +18,7 @@ import calcCovariance from '@/utils/maths/covariance'
 import calcVariance from '@/utils/maths/variance'
 import standarddev from '@/utils/maths/standarddev'
 import { TRADE_KEY } from 'dist'
+import getAvgMarketReturn from '@/utils/getAvgMarketReturn'
 
 export class Strategy {
   private data: OHLCV[] = []
@@ -99,8 +100,12 @@ export class Strategy {
     )
     const averageReturn =
       returns.reduce((sum, r) => sum + r, 0) / returns.length
-    const riskFreeRate = 0 
-    const marketReturn = 0 // Placeholder for market return, should be calculated based on market data
+    const riskFreeRate = 0
+    const marketReturn = await getAvgMarketReturn(
+      this.strategyOptions.pair,
+      TimeFrame.YEAR,
+      5,
+    )
 
     const covariance = calcCovariance(returns, marketReturn)
     const variance = calcVariance(returns)
