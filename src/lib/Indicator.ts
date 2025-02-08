@@ -45,3 +45,4 @@ export class Indicator extends EventEmitter {
     return super.on(event, listener)
   }
 }
+
