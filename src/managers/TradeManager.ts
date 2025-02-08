@@ -11,10 +11,6 @@ export class TradeManager {
     this.strategy = strategy
   }
 
-  protected getTrade(id: string): Trade | null {
-    return this.trades.get(id) || null
-  }
-
   public onUpdate(update: OHLCV, updates: OHLCV[]) {
     for (const trade of this.trades.values()) {
       if (!trade.getData()[TRADE_KEY.isClosed]) continue
@@ -22,7 +18,15 @@ export class TradeManager {
     }
   }
 
-  protected createTrade(options: CreateTradeOptions): Trade {
+  public getTrade(id: string): Trade | null {
+    return this.trades.get(id) || null
+  }
+
+  public getTrades(): Trade[] {
+    return Array.from(this.trades.values())
+  }
+
+  public createTrade(options: CreateTradeOptions): Trade {
     const trade = new Trade({
       orderType: options.orderType,
       pair: this.strategy.strategyOptions.pair,
@@ -39,7 +43,7 @@ export class TradeManager {
     return trade
   }
 
-  protected closeTrade(tradeId: string) {
+  public closeTrade(tradeId: string) {
     this.getTrade(tradeId)?.close()
   }
 }
