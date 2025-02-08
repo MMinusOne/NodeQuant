@@ -20,7 +20,7 @@ export class Indicator extends EventEmitter {
   }
 
   // Provides the first sample of data if not already provided
-  protected provide(data: OHLCV[]) {
+  public provide(data: OHLCV[]) {
     if (this.data.length === 0 && data.length > 0) {
       this.data = data
       this.emit(TimelineEvents.PROVIDED, this.data)
@@ -28,7 +28,7 @@ export class Indicator extends EventEmitter {
   }
 
   // Feeds new data in
-  protected feed(data: OHLCV) {
+  public feed(data: OHLCV) {
     this.data.push(data)
     this.emit(TimelineEvents.FED, data)
   }

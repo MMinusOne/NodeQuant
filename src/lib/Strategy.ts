@@ -6,12 +6,14 @@ import downloadPairData from '@/utils/dataInstaller'
 import { CandleSticks } from '@/ChartingSystems'
 import { TimelineManager } from '@/managers/TimelineManager'
 import { TradeManager } from '@/managers/TradeManager'
+import { Indicator } from './Indicator'
 
 export class Strategy {
   private data: OHLCV[] = []
   public readonly strategyOptions: StrategyOptions
   protected indicators: TimelineManager
   public tradeManager: TradeManager = new TradeManager(this)
+  private rawIndicators: Indicator[] = []
 
   constructor(strategyOptions: StrategyOptions) {
     const {
@@ -33,6 +35,7 @@ export class Strategy {
       simulationOptions,
       pair,
     }
+    this.rawIndicators = indicators
     this.indicators = new TimelineManager(indicators)
     this.loadData()
   }
@@ -46,6 +49,18 @@ export class Strategy {
 
     const data = await downloadPairData(pair, timeFrame, dataLength)
     this.data.push(...data)
+    this.provideAllIndicators();
+  }
+
+  private provideAllIndicators() {
+    for (const rawIndicator of this.rawIndicators) {
+      rawIndicator.provide(this.data)
+    }
+  }
+  private feedAllIndicators(data: OHLCV) {
+    for (const rawIndicator of this.rawIndicators) {
+      rawIndicator.feed(data)
+    }
   }
 
   // Backtesting system to simulate trades
@@ -69,5 +84,6 @@ export class Strategy {
 
   private internalUpdate(update: OHLCV, updates: OHLCV[]) {
     this.tradeManager.onUpdate(update, updates)
+    this.feedAllIndicators(update);
   }
 }
