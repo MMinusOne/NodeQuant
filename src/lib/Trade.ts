@@ -10,7 +10,7 @@ import calcPL from '@/utils/maths/pl'
 import { OHLCV } from 'ccxt'
 
 export class Trade {
-  private readonly id: string
+  public readonly id: string
   private readonly tradeData: Map<TRADE_KEY, any>
 
   constructor(options: TradeOptions) {

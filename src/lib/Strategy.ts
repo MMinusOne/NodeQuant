@@ -94,7 +94,7 @@ export class Strategy {
     }
 
     const tradeHistory = this.tradeManager.getTradeHistory()
-    console.log(tradeHistory)
+
     const returns = tradeHistory.map(trade => trade.getData()[TRADE_KEY.PL] || 0)
     
     if (returns.length === 0) {

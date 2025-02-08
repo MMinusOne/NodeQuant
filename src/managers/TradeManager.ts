@@ -13,8 +13,9 @@ export class TradeManager {
 
   public onUpdate(update: OHLCV, updates: OHLCV[]) {
     for (const trade of this.trades.values()) {
-      if (!trade.getData()[TRADE_KEY.isClosed]) continue
-      trade.onUpdate(update, updates)
+      if (!trade.getData()[TRADE_KEY.isClosed]) {
+        trade.onUpdate(update, updates)
+      }
     }
   }
 
