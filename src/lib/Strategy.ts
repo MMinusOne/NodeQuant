@@ -5,19 +5,18 @@ import {
   SimulationOptions,
   StrategyOptions,
   TimeFrame,
+  TRADE_KEY,
 } from '@/types'
 import { OHLCV } from 'ccxt'
 import downloadPairData from '@/utils/dataInstaller'
 import { CandleSticks } from '@/ChartingSystems'
 import { TradeManager } from '@/managers/TradeManager'
-import { Indicator } from './Indicator'
 import alpha from '@/utils/maths/alpha'
 import beta from '@/utils/maths/beta'
 import sharpeE from '@/utils/maths/sharpeE'
 import calcCovariance from '@/utils/maths/covariance'
 import calcVariance from '@/utils/maths/variance'
 import standarddev from '@/utils/maths/standarddev'
-import { TRADE_KEY } from 'dist'
 import getAvgMarketReturn from '@/utils/getAvgMarketReturn'
 
 export class Strategy {
@@ -50,8 +49,7 @@ export class Strategy {
     this.tradeManager = new TradeManager(this)
   }
 
-  // Installs the crypto pair data this strategy works on
-  public async loadData() {
+  public async loadData(): Promise<void> {
     const { pair, timeFrame, dataLength } = this.strategyOptions
     const dataFolderPath = path.join(process.cwd(), 'data')
 
@@ -59,20 +57,21 @@ export class Strategy {
       fs.mkdirSync(dataFolderPath)
     }
 
-    this.data.push(...(await downloadPairData(pair, timeFrame, dataLength)))
+    this.data = await downloadPairData(pair, timeFrame, dataLength)
   }
 
-  private provideAllIndicators() {
-    this.strategyOptions.indicators.forEach((indicator) =>
-      indicator.provide(this.data),
-    )
+  private provideAllIndicators(): void {
+    for (const indicator of this.strategyOptions.indicators) {
+      indicator.provide(this.data)
+    }
   }
 
-  private feedAllIndicators(data: OHLCV) {
-    this.strategyOptions.indicators.forEach((indicator) => indicator.feed(data))
+  private feedAllIndicators(data: OHLCV): void {
+    for (const indicator of this.strategyOptions.indicators) {
+      indicator.feed(data)
+    }
   }
 
-  // Backtesting system to simulate trades
   public async backtest({}: SimulationOptions): Promise<BacktestResults> {
     const results: BacktestResults = {
       alpha: 0,
@@ -84,6 +83,7 @@ export class Strategy {
       profitFactor: 0,
       sharpeE: 0,
     }
+
     await Promise.all([this.internalStart(), this.onStart(this.data)])
 
     for (const update of this.data) {
@@ -94,28 +94,41 @@ export class Strategy {
     }
 
     const tradeHistory = this.tradeManager.getTradeHistory()
+    console.log(tradeHistory)
+    const returns = tradeHistory.map(trade => trade.getData()[TRADE_KEY.PL] || 0)
+    
+    if (returns.length === 0) {
+      return results
+    }
 
-    const returns = tradeHistory.map(
-      (trade) => trade.getData()[TRADE_KEY.PL] || 0,
-    )
-    const averageReturn =
-      returns.reduce((sum, r) => sum + r, 0) / returns.length
+    const totalPL = returns.reduce((sum, r) => sum + r, 0)
+    const profitableTrades = returns.filter(r => r > 0).length
+    
+    results.return = totalPL
+    results.percentageProfitable = (profitableTrades / returns.length) * 100
+    results.maxDrawdown = Math.min(...returns)
+    results.maxProfit = Math.max(...returns)
+
+    // Calculate profit factor
+    const grossProfit = returns.filter(r => r > 0).reduce((sum, r) => sum + r, 0)
+    const grossLoss = Math.abs(returns.filter(r => r < 0).reduce((sum, r) => sum + r, 0))
+    results.profitFactor = grossLoss !== 0 ? grossProfit / grossLoss : grossProfit
+
+    // Calculate risk metrics
+    const averageReturn = totalPL / returns.length
     const riskFreeRate = 0
+    const years = 5
     const marketReturn = await getAvgMarketReturn(
       this.strategyOptions.pair,
-      TimeFrame.YEAR,
-      5,
+      TimeFrame.MONTH,
+      12 * years
     )
 
-    const covariance = calcCovariance(returns, marketReturn)
-    const variance = calcVariance(returns)
+    const covariance = calcCovariance(returns, marketReturn) || 0
+    const variance = calcVariance(returns) || 0
+    
     results.beta = beta(covariance, variance)
-    results.alpha = alpha(
-      averageReturn,
-      riskFreeRate,
-      results.beta,
-      marketReturn,
-    )
+    results.alpha = alpha(averageReturn, riskFreeRate, results.beta, marketReturn)
 
     const standardDeviation = standarddev(returns)
     results.sharpeE = sharpeE(averageReturn, riskFreeRate, 0, standardDeviation)
@@ -127,14 +140,14 @@ export class Strategy {
     // this.provideAllIndicators();
   }
 
-  private async internalUpdate(update: OHLCV, updates: OHLCV[]) {
+  private async internalUpdate(update: OHLCV, updates: OHLCV[]): Promise<void> {
     this.feedAllIndicators(update)
 
     await Promise.all(
-      this.strategyOptions.indicators.map(async (indicator) => {
-        const indicatorData = await indicator.generate()
-        this.indicators.set(indicator.key, indicatorData)
-      }),
+      this.strategyOptions.indicators.map(async indicator => {
+        const data = await indicator.generate()
+        this.indicators.set(indicator.key, data)
+      })
     )
 
     this.tradeManager.onUpdate(update, updates)

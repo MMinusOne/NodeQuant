@@ -14,10 +14,18 @@ export default async function getAvgMarketReturn(
     { paginate: true },
   )
 
-  const total = data.reduce((sum, candle) => {
-    const closePrice = Number(candle.at(4))
-    return sum + closePrice
-  }, 0)
+  let totalReturn = 0
+  for (let i = 1; i < data.length; i++) {
+    const prevCandle = data[i-1]
+    const currCandle = data[i]
+    
+    if (!prevCandle || !currCandle) continue
+    
+    const prevClose = Number(prevCandle[4])
+    const currClose = Number(currCandle[4])
+    const returnPct = ((currClose - prevClose) / prevClose) * 100
+    totalReturn += returnPct
+  }
 
-  return total / data.length
+  return totalReturn / (data.length - 1)
 }

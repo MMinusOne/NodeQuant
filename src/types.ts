@@ -172,6 +172,6 @@ export enum TimeFrame {
   THREE_HOURS = '3h',
   FOUR_HOURS = '4h',
   DAY = '1d',
-  MONTH = '1M',
-  YEAR = '1Y',
+  WEEK = '1w', 
+  MONTH = '1M', 
 }
