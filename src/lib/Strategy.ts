@@ -1,19 +1,17 @@
-import fs from 'fs'
-import path from 'path'
-import { SimulationOptions, StrategyOptions, TimeFrame } from '@/types'
-import { OHLCV } from 'ccxt'
-import downloadPairData from '@/utils/dataInstaller'
-import { CandleSticks } from '@/ChartingSystems'
-import { TimelineManager } from '@/managers/TimelineManager'
-import { TradeManager } from '@/managers/TradeManager'
-import { Indicator } from './Indicator'
+import fs from 'fs';
+import path from 'path';
+import { SimulationOptions, StrategyOptions, TimeFrame } from '@/types';
+import { OHLCV } from 'ccxt';
+import downloadPairData from '@/utils/dataInstaller';
+import { CandleSticks } from '@/ChartingSystems';
+import { TradeManager } from '@/managers/TradeManager';
+import { Indicator } from './Indicator';
 
 export class Strategy {
-  private data: OHLCV[] = []
-  public readonly strategyOptions: StrategyOptions
-  protected indicators: TimelineManager
-  public tradeManager: TradeManager = new TradeManager(this)
-  private rawIndicators: Indicator[] = []
+  private data: OHLCV[] = [];
+  public readonly strategyOptions: Required<StrategyOptions>;
+  public tradeManager: TradeManager;
+  public indicators: Map<string, any> = new Map();
 
   constructor(strategyOptions: StrategyOptions) {
     const {
@@ -24,7 +22,7 @@ export class Strategy {
       indicators = [],
       simulationOptions,
       pair,
-    } = strategyOptions
+    } = strategyOptions;
 
     this.strategyOptions = {
       name,
@@ -32,60 +30,65 @@ export class Strategy {
       timeFrame,
       chartType,
       indicators,
-      simulationOptions,
+      simulationOptions: simulationOptions ?? { pair },
       pair,
-    }
-    this.rawIndicators = indicators
-    this.indicators = new TimelineManager(indicators)
+    };
+
+    this.tradeManager = new TradeManager(this);
   }
 
   // Installs the crypto pair data this strategy works on
   public async loadData() {
-    const { pair, timeFrame, dataLength } = this.strategyOptions
-    const dataFolderPath = path.join(process.cwd(), 'data')
+    const { pair, timeFrame, dataLength } = this.strategyOptions;
+    const dataFolderPath = path.join(process.cwd(), 'data');
 
-    if (!fs.existsSync(dataFolderPath)) fs.mkdirSync(dataFolderPath)
+    if (!fs.existsSync(dataFolderPath)) {
+      fs.mkdirSync(dataFolderPath);
+    }
 
-    const data = await downloadPairData(pair, timeFrame, dataLength)
-    this.data.push(...data)
+    this.data.push(...(await downloadPairData(pair, timeFrame, dataLength)));
   }
 
   private provideAllIndicators() {
-    for (const rawIndicator of this.rawIndicators) {
-      rawIndicator.provide(this.data)
-    }
+    this.strategyOptions.indicators.forEach(indicator => indicator.provide(this.data));
   }
+
   private feedAllIndicators(data: OHLCV) {
-    for (const rawIndicator of this.rawIndicators) {
-      rawIndicator.feed(data)
-    }
+    this.strategyOptions.indicators.forEach(indicator => indicator.feed(data));
   }
 
   // Backtesting system to simulate trades
   public async backtest({}: SimulationOptions) {
-    const { data } = this
-    if (!data.length) return
+    if (!this.data.length) return;
 
-    this.onStart(data)
-    this.internalStart()
+    await Promise.all([this.internalStart(), this.onStart(this.data)]);
 
-    for (const updateIndex in data) {
-      const update = this.data.at(parseInt(updateIndex))!
-      this.internalUpdate(update, data)
-      this.onUpdate(update, data)
+    for (const update of this.data) {
+      await Promise.all([
+        this.internalUpdate(update, this.data),
+        this.onUpdate(update, this.data),
+      ]);
     }
+  }
+
+  private internalStart() {
+    // this.provideAllIndicators();
+  }
+
+  private async internalUpdate(update: OHLCV, updates: OHLCV[]) {
+    this.feedAllIndicators(update);
+
+    await Promise.all(
+      this.strategyOptions.indicators.map(async indicator => {
+        const indicatorData = await indicator.generate();
+        this.indicators.set(indicator.key, indicatorData);
+      })
+    );
+
+    this.tradeManager.onUpdate(update, updates);
   }
 
   protected onStart(updates: OHLCV[]): void {}
 
   protected onUpdate(update: OHLCV, updates: OHLCV[]): void {}
-
-  private internalStart() {
-    // this.provideAllIndicators()
-  }
-
-  private internalUpdate(update: OHLCV, updates: OHLCV[]) {
-    this.tradeManager.onUpdate(update, updates)
-    this.feedAllIndicators(update)
-  }
 }

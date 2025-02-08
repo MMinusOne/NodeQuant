@@ -77,7 +77,7 @@ export interface TimelineManagerSystem extends EventEmitter {
 
 export interface TimelineProfile {
   key: string
-  data: []
+  data: any[]
 }
 
 export type TimelineEventsInterface = {

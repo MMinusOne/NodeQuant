@@ -21,7 +21,6 @@ export class Indicator extends EventEmitter {
 
   // Provides the first sample of data if not already provided
   public provide(data: OHLCV[]) {
-    console.log('provided')
     if (this.data.length === 0 && data.length > 0) {
       this.data = data
       this.emit(TimelineEvents.PROVIDED, this.data)
