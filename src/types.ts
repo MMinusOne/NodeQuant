@@ -27,6 +27,8 @@ export interface CreateTradeOptions {
   orderType: OrderType
   size: number
   limitPrice?: number
+  leverage?: number
+  open?: boolean
   riskOptions?: {
     TP?: number
     SL?: number
@@ -49,12 +51,6 @@ export interface IndicatorOptions {
   indicators?: Indicator[]
 }
 
-export interface StrategyData {
-  pair: CryptoPair
-  timeframe: TimeFrame
-  data: OHLCV[]
-}
-
 export interface SimulationOptions {
   capital?: number
   leverage?: number
@@ -64,7 +60,7 @@ export interface SimulationOptions {
 
 export interface StrategyOptions {
   name: string
-  pairs: CryptoPair[]
+  pair: CryptoPair
   dataLength: number
   timeFrame: TimeFrame
   indicators?: Indicator[]
@@ -122,7 +118,9 @@ export enum TRADE_KEY {
   fee = 'fee',
   pair = 'pair',
   blockChainTrack = 'blockChainTrack',
-  timestamp = 'timestamp'
+  orderType = 'orderType',
+  positionType = 'positionType',
+  timestamp = 'timestamp',
 }
 
 export interface TradeData {
@@ -130,24 +128,28 @@ export interface TradeData {
   [TRADE_KEY.isOpen]: boolean
   [TRADE_KEY.isClosed]: boolean
   [TRADE_KEY.PL]?: number
-  [TRADE_KEY.TP]?: number,
-  [TRADE_KEY.SL]?: number,
+  [TRADE_KEY.TP]?: number
+  [TRADE_KEY.SL]?: number
   [TRADE_KEY.openPrice]: undefined
   [TRADE_KEY.closePrice]: undefined
   [TRADE_KEY.fee]?: number
   [TRADE_KEY.blockChainTrack]: number
   [TRADE_KEY.pair]: CryptoPair
+  [TRADE_KEY.orderType]: OrderType
+  [TRADE_KEY.positionType]: PositionType
   [TRADE_KEY.timestamp]: number
 }
 
-export interface TradeOptions { 
-  open?: boolean;
-  positionSize: number;
-  leverage?: number;
-  TP?: number;
-  SL?: number;
-  pair: CryptoPair;
-  isLive?: boolean;
+export interface TradeOptions {
+  open?: boolean
+  positionSize: number
+  leverage?: number
+  TP?: number
+  SL?: number
+  pair: CryptoPair
+  orderType: OrderType
+  positionType: PositionType
+  isLive?: boolean
 }
 
 export enum TimeFrame {
