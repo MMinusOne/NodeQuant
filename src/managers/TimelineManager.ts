@@ -1,4 +1,5 @@
 import { TimelineEvents, TimelineManagerSystem, TimelineProfile } from '@/types'
+import { OHLCV } from 'ccxt'
 
 export class TimelineManager {
   private systems: TimelineManagerSystem[]
@@ -7,19 +8,28 @@ export class TimelineManager {
   constructor(systems: TimelineManagerSystem[]) {
     this.systems = systems
 
+    for (const system of this.systems) {
+      this.timelineProfiles.push({
+        key: system.key,
+        data: [],
+      })
+    }
+
     const setData = async (system: TimelineManagerSystem) => {
       const data = await system.generate()
       const profile = this.getProfile(system.key)
+      console.log(profile)
       if (!profile) return
-      if (!profile.data) {
-        profile.data = []
-      }
       profile.data = data
     }
 
     for (const system of this.systems) {
-      system.on(TimelineEvents.FED, setData)
-      system.on(TimelineEvents.PROVIDED, setData)
+      system.on(TimelineEvents.FED, (data: OHLCV) => {
+        setData(system)
+      })
+      system.on(TimelineEvents.PROVIDED, (data: OHLCV[]) => {
+        setData(system)
+      })
     }
   }
 
@@ -33,7 +43,8 @@ export class TimelineManager {
 
   private getData(key: string, index: number) {
     const profile = this.getProfile(key)
-    if (!profile || !profile.data) return null
+    if (!profile || !profile.data?.length) return null
+    console.log('getData', profile.data?.length)
     return profile.data.at(index)
   }
 

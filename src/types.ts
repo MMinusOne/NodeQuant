@@ -71,6 +71,8 @@ export interface StrategyOptions {
 export interface TimelineManagerSystem extends EventEmitter {
   key: string
   generate: () => any
+  provide: (data: OHLCV[]) => void
+  feed: (data: OHLCV) => void
 }
 
 export interface TimelineProfile {

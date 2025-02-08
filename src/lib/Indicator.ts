@@ -9,18 +9,19 @@ import { OHLCV } from 'ccxt'
 export class Indicator extends EventEmitter {
   protected data: OHLCV[] = []
   public name: string
-  public key: string;
+  public key: string
   public description: string
 
   constructor({ name, key, description }: IndicatorOptions) {
     super()
     this.name = name
-    this.key = key;
+    this.key = key
     this.description = description
   }
 
   // Provides the first sample of data if not already provided
   public provide(data: OHLCV[]) {
+    console.log('provided')
     if (this.data.length === 0 && data.length > 0) {
       this.data = data
       this.emit(TimelineEvents.PROVIDED, this.data)
@@ -35,7 +36,7 @@ export class Indicator extends EventEmitter {
 
   // Generates the result
   public generate(): any {
-    return null;
+    return null
   }
 
   on<K extends keyof TimelineEventsInterface>(
@@ -45,4 +46,3 @@ export class Indicator extends EventEmitter {
     return super.on(event, listener)
   }
 }
-

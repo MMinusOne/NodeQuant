@@ -37,7 +37,6 @@ export class Strategy {
     }
     this.rawIndicators = indicators
     this.indicators = new TimelineManager(indicators)
-    this.loadData()
   }
 
   // Installs the crypto pair data this strategy works on
@@ -49,7 +48,6 @@ export class Strategy {
 
     const data = await downloadPairData(pair, timeFrame, dataLength)
     this.data.push(...data)
-    this.provideAllIndicators();
   }
 
   private provideAllIndicators() {
@@ -69,10 +67,10 @@ export class Strategy {
     if (!data.length) return
 
     this.onStart(data)
+    this.internalStart()
 
-    console.log('backtest', data.length)
-
-    for (const update of data) {
+    for (const updateIndex in data) {
+      const update = this.data.at(parseInt(updateIndex))!
       this.internalUpdate(update, data)
       this.onUpdate(update, data)
     }
@@ -82,8 +80,12 @@ export class Strategy {
 
   protected onUpdate(update: OHLCV, updates: OHLCV[]): void {}
 
+  private internalStart() {
+    // this.provideAllIndicators()
+  }
+
   private internalUpdate(update: OHLCV, updates: OHLCV[]) {
     this.tradeManager.onUpdate(update, updates)
-    this.feedAllIndicators(update);
+    this.feedAllIndicators(update)
   }
 }
