@@ -34,11 +34,11 @@ export class Strategy {
       pair,
     }
     this.indicators = new TimelineManager(indicators)
-    this.downloadAllPairData()
+    this.loadData()
   }
 
   // Installs the crypto pair data this strategy works on
-  private async downloadAllPairData() {
+  public async loadData() {
     const { pair, timeFrame, dataLength } = this.strategyOptions
     const dataFolderPath = path.join(process.cwd(), 'data')
 
@@ -51,9 +51,11 @@ export class Strategy {
   // Backtesting system to simulate trades
   public async backtest({}: SimulationOptions) {
     const { data } = this
-    if (!data) return
+    if (!data.length) return
 
     this.onStart(data)
+
+    console.log('backtest', data.length)
 
     for (const update of data) {
       this.internalUpdate(update, data)
