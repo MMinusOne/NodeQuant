@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { SimulationOptions, StrategyOptions, TimeFrame } from '@/types';
+import { BacktestResults, SimulationOptions, StrategyOptions, TimeFrame } from '@/types';
 import { OHLCV } from 'ccxt';
 import downloadPairData from '@/utils/dataInstaller';
 import { CandleSticks } from '@/ChartingSystems';
@@ -58,9 +58,16 @@ export class Strategy {
   }
 
   // Backtesting system to simulate trades
-  public async backtest({}: SimulationOptions) {
-    if (!this.data.length) return;
-
+  public async backtest({}: SimulationOptions): Promise<BacktestResults> {
+    const results: BacktestResults = {
+      alpha: 0, 
+      beta: 0, 
+      maxDrawdown: 0,
+      maxProfit: 0, 
+      percentageProfitable: 0, 
+      profitFactor: 0, 
+      sharpeE: 0
+    }
     await Promise.all([this.internalStart(), this.onStart(this.data)]);
 
     for (const update of this.data) {
@@ -69,6 +76,10 @@ export class Strategy {
         this.onUpdate(update, this.data),
       ]);
     }
+
+    const tradeHistory = this.tradeManager.getTradeHistory();
+    
+    return results;
   }
 
   private internalStart() {

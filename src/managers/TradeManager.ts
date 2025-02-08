@@ -43,6 +43,15 @@ export class TradeManager {
     return trade
   }
 
+  public getTradeHistory() {
+    const trades = this.getTrades()
+
+    return trades.filter(async (trade) => {
+      const tradeData = await trade.getData()
+      return tradeData[TRADE_KEY.isClosed]
+    })
+  }
+
   public closeTrade(tradeId: string) {
     this.getTrade(tradeId)?.close()
   }
