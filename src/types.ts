@@ -10,6 +10,7 @@ export interface BacktestResults {
   maxDrawdown: number
   maxProfit: number
   profitFactor: number
+  return: number
   percentageProfitable: number
 }
 
@@ -115,6 +116,7 @@ export enum TRADE_KEY {
   PL = 'PL',
   TP = 'TP',
   SL = 'SL',
+  drawdown = 'drawdown',
   openPrice = 'openPrice',
   closePrice = 'closePrice',
   fee = 'fee',
@@ -132,6 +134,7 @@ export interface TradeData {
   [TRADE_KEY.PL]?: number
   [TRADE_KEY.TP]?: number
   [TRADE_KEY.SL]?: number
+  [TRADE_KEY.drawdown]: number,
   [TRADE_KEY.openPrice]: undefined
   [TRADE_KEY.closePrice]: undefined
   [TRADE_KEY.fee]?: number

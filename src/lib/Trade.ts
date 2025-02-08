@@ -15,15 +15,16 @@ export class Trade {
   constructor(tradeOptions: TradeOptions) {
     this.tradeData = new Map<TRADE_KEY, any>([
       [TRADE_KEY.ID, generateMD5Id()],
+      [TRADE_KEY.TP, tradeOptions.TP],
+      [TRADE_KEY.SL, tradeOptions.SL],
       [TRADE_KEY.PL, 0],
+      [TRADE_KEY.drawdown, 0],
       [TRADE_KEY.closePrice, undefined],
       [TRADE_KEY.openPrice, undefined],
       [TRADE_KEY.isClosed, false],
       [TRADE_KEY.fee, undefined],
       [TRADE_KEY.blockChainTrack, undefined],
       [TRADE_KEY.timestamp, Date.now()],
-      [TRADE_KEY.TP, tradeOptions.TP],
-      [TRADE_KEY.SL, tradeOptions.SL],
       [TRADE_KEY.pair, tradeOptions.pair],
       [TRADE_KEY.orderType, tradeOptions.orderType],
       [TRADE_KEY.positionType, tradeOptions.positionType],
@@ -63,6 +64,11 @@ export class Trade {
           ? 100 * ((currentClose - open) / open)
           : 100 * ((open - currentClose) / open)
       this.tradeData.set(TRADE_KEY.PL, pl)
+
+      const currentDrawdown = this.tradeData.get(TRADE_KEY.drawdown);
+      if (pl < currentDrawdown) {
+        this.tradeData.set(TRADE_KEY.drawdown, pl);
+      }
     }
   }
 
