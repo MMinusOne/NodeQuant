@@ -95,24 +95,31 @@ export class Strategy {
 
     const tradeHistory = this.tradeManager.getTradeHistory()
 
-    const returns = tradeHistory.map(trade => trade.getData()[TRADE_KEY.PL] || 0)
-    
+    const returns = tradeHistory.map(
+      (trade) => trade.getData()[TRADE_KEY.PL] || 0,
+    )
+
     if (returns.length === 0) {
       return results
     }
 
     const totalPL = returns.reduce((sum, r) => sum + r, 0)
-    const profitableTrades = returns.filter(r => r > 0).length
-    
+    const profitableTrades = returns.filter((r) => r > 0).length
+
     results.return = totalPL
     results.percentageProfitable = (profitableTrades / returns.length) * 100
     results.maxDrawdown = Math.min(...returns)
     results.maxProfit = Math.max(...returns)
 
     // Calculate profit factor
-    const grossProfit = returns.filter(r => r > 0).reduce((sum, r) => sum + r, 0)
-    const grossLoss = Math.abs(returns.filter(r => r < 0).reduce((sum, r) => sum + r, 0))
-    results.profitFactor = grossLoss !== 0 ? grossProfit / grossLoss : grossProfit
+    const grossProfit = returns
+      .filter((r) => r > 0)
+      .reduce((sum, r) => sum + r, 0)
+    const grossLoss = Math.abs(
+      returns.filter((r) => r < 0).reduce((sum, r) => sum + r, 0),
+    )
+    results.profitFactor =
+      grossLoss !== 0 ? grossProfit / grossLoss : grossProfit
 
     // Calculate risk metrics
     const averageReturn = totalPL / returns.length
@@ -121,17 +128,27 @@ export class Strategy {
     const marketReturn = await getAvgMarketReturn(
       this.strategyOptions.pair,
       TimeFrame.MONTH,
-      12 * years
+      12 * years,
     )
 
     const covariance = calcCovariance(returns, marketReturn) || 0
     const variance = calcVariance(returns) || 0
-    
+
     results.beta = beta(covariance, variance)
-    results.alpha = alpha(averageReturn, riskFreeRate, results.beta, marketReturn)
+    results.alpha = alpha(
+      averageReturn,
+      riskFreeRate,
+      results.beta,
+      marketReturn,
+    )
 
     const standardDeviation = standarddev(returns)
-    results.sharpeE = sharpeE(averageReturn, riskFreeRate, 0, standardDeviation)
+    results.sharpeE = sharpeE(
+      averageReturn,
+      results.return,
+      riskFreeRate,
+      standardDeviation,
+    )
 
     return results
   }
@@ -144,10 +161,10 @@ export class Strategy {
     this.feedAllIndicators(update)
 
     await Promise.all(
-      this.strategyOptions.indicators.map(async indicator => {
+      this.strategyOptions.indicators.map(async (indicator) => {
         const data = await indicator.generate()
         this.indicators.set(indicator.key, data)
-      })
+      }),
     )
 
     this.tradeManager.onUpdate(update, updates)
