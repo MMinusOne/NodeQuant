@@ -82,6 +82,7 @@ export class Strategy {
       return: 0,
       profitFactor: 0,
       sharpeE: 0,
+      tradeCount: 0
     }
 
     await Promise.all([this.internalStart(), this.onStart(this.data)])
@@ -94,6 +95,8 @@ export class Strategy {
     }
 
     const tradeHistory = this.tradeManager.getTradeHistory()
+
+    results.tradeCount = tradeHistory.length;
 
     const returns = tradeHistory.map((trade) => {
       const tradeData = trade.getData()

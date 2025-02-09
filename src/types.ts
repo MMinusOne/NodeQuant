@@ -12,6 +12,7 @@ export interface BacktestResults {
   profitFactor: number
   return: number
   percentageProfitable: number
+  tradeCount: number
 }
 
 export interface CandleStickObject {
@@ -136,8 +137,8 @@ export interface TradeData {
   [TRADE_KEY.PL]?: number
   [TRADE_KEY.TP]?: number
   [TRADE_KEY.SL]?: number
-  [TRADE_KEY.positionSize]: number,
-  [TRADE_KEY.leverage]: number 
+  [TRADE_KEY.positionSize]: number
+  [TRADE_KEY.leverage]: number
   [TRADE_KEY.drawdown]: number
   [TRADE_KEY.openPrice]: undefined
   [TRADE_KEY.closePrice]: undefined
