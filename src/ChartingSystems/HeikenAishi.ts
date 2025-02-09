@@ -1,22 +1,22 @@
-import { parseIntoRows } from "@/utils/parseOHLCV";
-import { OHLCV } from "ccxt";
-import { ChartingSystem } from "@/ChartingSystems/ChartingSystem";
-import { HeikinAshiInput } from "technicalindicators/declarations/chart_types/HeikinAshi";
-import ta from "technicalindicators";
+import { parseIntoRows } from '@/utils/parseOHLCV'
+import { OHLCV } from 'ccxt'
+import { ChartingSystem } from '@/chartingSystems/ChartingSystem'
+import { HeikinAshiInput } from 'technicalindicators/declarations/chart_types/HeikinAshi'
+import ta from 'technicalindicators'
 
 export class HeikenAishi extends ChartingSystem {
-  public options: Omit<HeikinAshiInput, "low" | "close" | "high" | "open">;
+  public options: Omit<HeikinAshiInput, 'low' | 'close' | 'high' | 'open'>
 
   constructor(
-    options: Omit<HeikinAshiInput, "low" | "close" | "high" | "open">
+    options: Omit<HeikinAshiInput, 'low' | 'close' | 'high' | 'open'>,
   ) {
-    super();
-    this.options = options;
+    super()
+    this.options = options
   }
 
   public transform(rawData: OHLCV[]) {
     const { opens, highs, lows, closes, volumes, timestamps } =
-      parseIntoRows(rawData);
+      parseIntoRows(rawData)
     return ta.heikinashi({
       ...this.options,
       open: opens,
@@ -24,7 +24,7 @@ export class HeikenAishi extends ChartingSystem {
       low: lows,
       close: closes,
       volume: volumes,
-      timestamp: timestamps
-    });
+      timestamp: timestamps,
+    })
   }
 }

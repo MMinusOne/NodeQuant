@@ -1,6 +1,5 @@
-export * from '@/lib/Strategy';
-export * from '@/lib/Indicator';
-export * from '@/ChartingSystems';
-export * as Indicators from '@/Indicators';
-export * from '@/types';
-
+export * from '@/lib/Strategy'
+export * from '@/lib/Indicator'
+export * from '@/chartingSystems'
+export * as Indicators from '@/indicators'
+export * from '@/types'

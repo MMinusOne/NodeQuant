@@ -1,5 +1,5 @@
 import { Num, OHLCV } from 'ccxt'
-import { ChartingSystem } from '@/ChartingSystems/ChartingSystem'
+import { ChartingSystem } from '@/chartingSystems/ChartingSystem'
 import { Indicator } from '@/lib/Indicator'
 import { EventEmitter } from 'events'
 
@@ -134,7 +134,7 @@ export interface TradeData {
   [TRADE_KEY.PL]?: number
   [TRADE_KEY.TP]?: number
   [TRADE_KEY.SL]?: number
-  [TRADE_KEY.drawdown]: number,
+  [TRADE_KEY.drawdown]: number
   [TRADE_KEY.openPrice]: undefined
   [TRADE_KEY.closePrice]: undefined
   [TRADE_KEY.fee]?: number
@@ -172,6 +172,6 @@ export enum TimeFrame {
   THREE_HOURS = '3h',
   FOUR_HOURS = '4h',
   DAY = '1d',
-  WEEK = '1w', 
-  MONTH = '1M', 
+  WEEK = '1w',
+  MONTH = '1M',
 }

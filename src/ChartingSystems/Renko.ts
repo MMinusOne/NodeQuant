@@ -1,6 +1,6 @@
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import { OHLCV } from 'ccxt'
-import { ChartingSystem } from '@/ChartingSystems/ChartingSystem'
+import { ChartingSystem } from '@/chartingSystems/ChartingSystem'
 import ta from 'technicalindicators'
 import { RenkoInput } from 'technicalindicators/declarations/chart_types/Renko'
 
