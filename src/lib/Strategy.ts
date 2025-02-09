@@ -95,9 +95,12 @@ export class Strategy {
 
     const tradeHistory = this.tradeManager.getTradeHistory()
 
-    const returns = tradeHistory.map(
-      (trade) => trade.getData()[TRADE_KEY.PL] || 0,
-    )
+    const returns = tradeHistory.map((trade) => {
+      const tradeData = trade.getData()
+      const pl = tradeData[TRADE_KEY.PL] || 0
+      const leverage = tradeData[TRADE_KEY.leverage] || 1
+      return pl * leverage
+    })
 
     if (returns.length === 0) {
       return results

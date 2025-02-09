@@ -17,6 +17,8 @@ export class Trade {
     this.id = generateMD5Id()
     this.tradeData = new Map<TRADE_KEY, any>([
       [TRADE_KEY.ID, this.id],
+      [TRADE_KEY.positionSize, options.positionSize],
+      [TRADE_KEY.leverage, options.leverage],
       [TRADE_KEY.TP, options.TP],
       [TRADE_KEY.SL, options.SL],
       [TRADE_KEY.PL, 0],

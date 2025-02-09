@@ -116,6 +116,8 @@ export enum TRADE_KEY {
   PL = 'PL',
   TP = 'TP',
   SL = 'SL',
+  positionSize = 'size',
+  leverage = 'leverage',
   drawdown = 'drawdown',
   openPrice = 'openPrice',
   closePrice = 'closePrice',
@@ -134,6 +136,8 @@ export interface TradeData {
   [TRADE_KEY.PL]?: number
   [TRADE_KEY.TP]?: number
   [TRADE_KEY.SL]?: number
+  [TRADE_KEY.positionSize]: number,
+  [TRADE_KEY.leverage]: number 
   [TRADE_KEY.drawdown]: number
   [TRADE_KEY.openPrice]: undefined
   [TRADE_KEY.closePrice]: undefined
