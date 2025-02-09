@@ -3,7 +3,7 @@ import path from 'path'
 import {
   BacktestResults,
   SimulationOptions,
-  StrategyOptions,
+  StrategyOptions, 
   TimeFrame,
   TRADE_KEY,
 } from '@/types'
@@ -57,19 +57,15 @@ export class Strategy {
       fs.mkdirSync(dataFolderPath)
     }
 
-    this.data = await downloadPairData(pair, timeFrame, dataLength)
+    this.data = await downloadPairData(pair, timeFrame, dataLength, dataFolderPath)
   }
 
   private provideAllIndicators(): void {
-    for (const indicator of this.strategyOptions.indicators) {
-      indicator.provide(this.data)
-    }
+    this.strategyOptions.indicators.forEach(indicator => indicator.provide(this.data))
   }
 
   private feedAllIndicators(data: OHLCV): void {
-    for (const indicator of this.strategyOptions.indicators) {
-      indicator.feed(data)
-    }
+    this.strategyOptions.indicators.forEach(indicator => indicator.feed(data))
   }
 
   public async backtest({}: SimulationOptions): Promise<BacktestResults> {
@@ -95,66 +91,45 @@ export class Strategy {
     }
 
     const tradeHistory = this.tradeManager.getTradeHistory()
+    results.tradeCount = tradeHistory.length
 
-    results.tradeCount = tradeHistory.length;
-
-    const returns = tradeHistory.map((trade) => {
-      const tradeData = trade.getData()
-      const pl = tradeData[TRADE_KEY.PL] || 0
-      const leverage = tradeData[TRADE_KEY.leverage] || 1
-      return pl * leverage
-    })
-
-    if (returns.length === 0) {
+    if (tradeHistory.length === 0) {
       return results
     }
 
+    const returns = tradeHistory.map(trade => {
+      const { [TRADE_KEY.PL]: pl = 0, [TRADE_KEY.leverage]: leverage = 1 } = trade.getData()
+      return pl * leverage
+    })
+
     const totalPL = returns.reduce((sum, r) => sum + r, 0)
-    const profitableTrades = returns.filter((r) => r > 0).length
+    const profitableTrades = returns.filter(r => r > 0)
+    const lossTrades = returns.filter(r => r < 0)
 
     results.return = totalPL
-    results.percentageProfitable = (profitableTrades / returns.length) * 100
+    results.percentageProfitable = (profitableTrades.length / returns.length) * 100
     results.maxDrawdown = Math.min(...returns)
     results.maxProfit = Math.max(...returns)
 
-    // Calculate profit factor
-    const grossProfit = returns
-      .filter((r) => r > 0)
-      .reduce((sum, r) => sum + r, 0)
-    const grossLoss = Math.abs(
-      returns.filter((r) => r < 0).reduce((sum, r) => sum + r, 0),
-    )
-    results.profitFactor =
-      grossLoss !== 0 ? grossProfit / grossLoss : grossProfit
+    const grossProfit = profitableTrades.reduce((sum, r) => sum + r, 0)
+    const grossLoss = Math.abs(lossTrades.reduce((sum, r) => sum + r, 0))
+    results.profitFactor = grossLoss !== 0 ? grossProfit / grossLoss : grossProfit
 
-    // Calculate risk metrics
     const averageReturn = totalPL / returns.length
     const riskFreeRate = 0
-    const years = 5
     const marketReturn = await getAvgMarketReturn(
       this.strategyOptions.pair,
       TimeFrame.MONTH,
-      12 * years,
+      60 // 5 years * 12 months
     )
 
     const covariance = calcCovariance(returns, marketReturn) || 0
     const variance = calcVariance(returns) || 0
+    const standardDeviation = standarddev(returns)
 
     results.beta = beta(covariance, variance)
-    results.alpha = alpha(
-      averageReturn,
-      riskFreeRate,
-      results.beta,
-      marketReturn,
-    )
-
-    const standardDeviation = standarddev(returns)
-    results.sharpeE = sharpeE(
-      averageReturn,
-      results.return,
-      riskFreeRate,
-      standardDeviation,
-    )
+    results.alpha = alpha(averageReturn, riskFreeRate, results.beta, marketReturn)
+    results.sharpeE = sharpeE(averageReturn, results.return, riskFreeRate, standardDeviation)
 
     return results
   }
@@ -167,10 +142,9 @@ export class Strategy {
     this.feedAllIndicators(update)
 
     await Promise.all(
-      this.strategyOptions.indicators.map(async (indicator) => {
-        const data = await indicator.generate()
-        this.indicators.set(indicator.key, data)
-      }),
+      this.strategyOptions.indicators.map(async indicator => {
+        this.indicators.set(indicator.key, await indicator.generate())
+      })
     )
 
     this.tradeManager.onUpdate(update, updates)

@@ -3,12 +3,11 @@ import path from 'path'
 import { CryptoPair, TimeFrame } from '@/types'
 import exchange from '@/exchange'
 
-const dataFolderPath = path.join(process.cwd(), 'data')
-
 export default async function downloadPairData(
   pair: CryptoPair,
   timeFrame: TimeFrame,
   dataLength: number,
+  dataFolderPath: string
 ) {
   const fileName = `${pair.replace('/', '_')}_${dataLength}_${timeFrame}.json`
   const filePath = path.join(dataFolderPath, fileName)
