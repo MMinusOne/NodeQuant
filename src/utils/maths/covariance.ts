@@ -1,4 +1,4 @@
-export default function covariance(returns: number[], marketReturn: number) {
+export function calcCovariance(returns: number[], marketReturn: number) {
   const meanReturn = returns.reduce((sum, r) => sum + r, 0) / returns.length
   return (
     returns.reduce(

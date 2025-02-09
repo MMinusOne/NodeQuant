@@ -1,5 +1,5 @@
-import variance from './variance'
+import { calcVariance } from './variance'
 
-export default function standarddev(returns: number[]): number {
-  return Math.sqrt(variance(returns))
+export function calcStddev(returns: number[]): number {
+  return Math.sqrt(calcVariance(returns))
 }

@@ -5,6 +5,6 @@
   Rm represents the market return, per a benchmark.
  */
 
-export default function alpha(r: number, rf: number = 0, beta: number, rm: number) {
+export function calcAlpha(r: number, rf: number = 0, beta: number, rm: number) {
   return r - rf - beta * (rm - rf)
 }

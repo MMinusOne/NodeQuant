@@ -6,7 +6,7 @@ import {
   PositionType,
 } from '@/types'
 import { generateMD5Id } from '@/utils/generateId'
-import calcPL from '@/utils/maths/pl'
+import { calcPL } from '@/utils/maths/pl'
 import { OHLCV } from 'ccxt'
 
 export class Trade {

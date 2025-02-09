@@ -38,6 +38,10 @@ export class Indicator extends EventEmitter {
     return null
   }
 
+  public clear(): void {
+    this.data = [];
+  }
+
   on<K extends keyof TimelineEventsInterface>(
     event: K,
     listener: TimelineEventsInterface[K],

@@ -7,7 +7,7 @@ export default async function downloadPairData(
   pair: CryptoPair,
   timeFrame: TimeFrame,
   dataLength: number,
-  dataFolderPath: string
+  dataFolderPath: string,
 ) {
   const fileName = `${pair.replace('/', '_')}_${dataLength}_${timeFrame}.json`
   const filePath = path.join(dataFolderPath, fileName)
@@ -32,5 +32,5 @@ export default async function downloadPairData(
   )
 
   fs.writeFileSync(filePath, JSON.stringify(fetchedData, null, 2))
-  return fetchedData
+  return { path: filePath, data: fetchedData }
 }

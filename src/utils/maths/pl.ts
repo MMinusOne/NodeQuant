@@ -1,6 +1,6 @@
 import { PositionType } from 'dist'
 
-export default function calcPL(
+export function calcPL(
   currentClose: number,
   openPrice: number,
   positionType: PositionType,

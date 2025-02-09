@@ -10,6 +10,6 @@ Rf = risk-free rate
 σp = standard deviation of the portfolio’s excess return
  */
 
-export default function sharpeE(E: number, rp: number, rf: number = 0, sp: number) {
+export function calcSharpeE(E: number, rp: number, rf: number = 0, sp: number) {
   return (E * (rp - rf)) / sp;
 }
