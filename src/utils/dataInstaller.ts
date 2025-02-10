@@ -17,7 +17,7 @@ export default async function downloadPairData(
       `Data for ${pair} with length ${dataLength} already exists. Returning existing data.`,
     )
     const existingData = fs.readFileSync(filePath, 'utf-8')
-    return JSON.parse(existingData)
+    return { path: filePath, data: JSON.parse(existingData) }
   }
 
   console.log(`Installing ${dataLength} candles for ${pair}.`)

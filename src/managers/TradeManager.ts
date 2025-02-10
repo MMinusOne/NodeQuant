@@ -56,4 +56,8 @@ export class TradeManager {
   public closeTrade(tradeId: string) {
     this.getTrade(tradeId)?.close()
   }
+
+  public clear() {
+    this.trades = new Map()
+  }
 }

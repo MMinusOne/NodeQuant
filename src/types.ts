@@ -13,7 +13,6 @@ export interface BacktestResults {
   return: number
   percentageProfitable: number
   tradeCount: number
-  generateReport: () => void
 }
 
 export interface CandleStickObject {

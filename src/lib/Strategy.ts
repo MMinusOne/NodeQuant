@@ -21,7 +21,6 @@ import {
   calcVariance,
 } from '@/utils/maths'
 import getAvgMarketReturn from '@/utils/getAvgMarketReturn'
-import { ReportManager } from '@/plugins/'
 
 export class Strategy {
   private data: OHLCV[] = []
@@ -68,6 +67,7 @@ export class Strategy {
       dataLength,
       dataFolderPath,
     )
+
     this.pairDataPath = pairDataPath
     this.data = data
   }
@@ -93,14 +93,7 @@ export class Strategy {
       profitFactor: 0,
       sharpeE: 0,
       tradeCount: 0,
-      generateReport: () => {},
     }
-
-    const reportManager = new ReportManager()
-
-    reportManager.createReportDirectory()
-
-    // reportManager.generateReport()
 
     await Promise.all([this.internalStart(), this.onStart(this.data)])
 
@@ -186,6 +179,8 @@ export class Strategy {
 
     this.tradeManager.onUpdate(update, updates)
   }
+
+  protected live() {}
 
   protected onStart(updates: OHLCV[]): void {}
 
