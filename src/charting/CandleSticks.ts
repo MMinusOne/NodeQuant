@@ -1,6 +1,6 @@
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import { OHLCV } from 'ccxt'
-import { ChartingSystem } from '@/chartingSystems/ChartingSystem'
+import { ChartingSystem } from '@/lib'
 import ta from 'technicalindicators'
 
 export class CandleSticks extends ChartingSystem {

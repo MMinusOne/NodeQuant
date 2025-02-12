@@ -1,6 +1,5 @@
 import { Num, OHLCV } from 'ccxt'
-import { ChartingSystem } from '@/chartingSystems/ChartingSystem'
-import { Indicator } from '@/lib/Indicator'
+import { ChartingSystem, Indicator } from '@/lib'
 import { EventEmitter } from 'events'
 
 export interface BacktestResults {

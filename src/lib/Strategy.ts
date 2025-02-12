@@ -9,7 +9,7 @@ import {
 } from '@/types'
 import { OHLCV } from 'ccxt'
 import downloadPairData from '@/utils/dataInstaller'
-import { CandleSticks } from '@/chartingSystems'
+import { CandleSticks } from '@/charting'
 import { TradeManager } from '@/managers/TradeManager'
 import {
   calcAlpha,

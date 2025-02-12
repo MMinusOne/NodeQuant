@@ -1,6 +1,6 @@
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import { OHLCV } from 'ccxt'
-import { ChartingSystem } from '@/chartingSystems/ChartingSystem'
+import { ChartingSystem } from '@/lib'
 import { HeikinAshiInput } from 'technicalindicators/declarations/chart_types/HeikinAshi'
 import ta from 'technicalindicators'
 

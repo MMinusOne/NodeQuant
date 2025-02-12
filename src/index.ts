@@ -1,6 +1,4 @@
-export * from '@/lib/Strategy'
-export * from '@/lib/Indicator'
-export * from '@/chartingSystems'
+export * from '@/lib/';
+export * from '@/managers'
 export * as Indicators from '@/indicators'
-export * as Plugins from '@/plugins'
 export * from '@/types'
