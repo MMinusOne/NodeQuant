@@ -1,10 +1,24 @@
-export class ReportManager { 
-    private reportsDirectory: string = '';
-    constructor() {
+import path from 'path'
+import fs from 'fs'
+import { BacktestResults, DataSource } from '@/types'
 
+export class ReportManager {
+  private reportsDirectory: string = path.join(process.cwd(), 'reports')
+
+  constructor() {
+    this.createReportsDirectory()
+  }
+
+  private createReportsDirectory() {
+    if (!fs.existsSync(this.reportsDirectory)) {
+      fs.mkdirSync(this.reportsDirectory)
     }
+  }
 
-    public createReportsDirectory() {}
+  private installReportDirectory(reportName: string, dataSources: DataSource[]) {}
+   
 
-    public generateReport() {}
+  public generateReport(backtestResults: BacktestResults) {
+    
+  }
 }

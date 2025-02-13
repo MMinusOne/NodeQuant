@@ -1,5 +1,5 @@
 import { Num, OHLCV } from 'ccxt'
-import { ChartingSystem, Indicator } from '@/lib'
+import { ChartingSystem, Indicator, Trade } from '@/lib'
 import { EventEmitter } from 'events'
 
 export interface BacktestResults {
@@ -12,6 +12,10 @@ export interface BacktestResults {
   return: number
   percentageProfitable: number
   tradeCount: number
+  // reportData: {
+  //   trades: Trade[]
+  //   data: DataSource[]
+  // }
 }
 
 export interface CandleStickObject {
@@ -159,6 +163,16 @@ export interface TradeOptions {
   orderType: OrderType
   positionType: PositionType
   isLive?: boolean
+}
+
+export interface DataSource {
+  type: DataSource
+  data: any[]
+}
+
+export enum DataSourceType {
+  PRICE = 'price',
+  FACTOR = 'factor',
 }
 
 export enum TimeFrame {
