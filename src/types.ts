@@ -12,10 +12,10 @@ export interface BacktestResults {
   return: number
   percentageProfitable: number
   tradeCount: number
-  // reportData: {
-  //   trades: Trade[]
-  //   data: DataSource[]
-  // }
+  reportData: {
+    trades: Trade[]
+    data: DataSource[]
+  }
 }
 
 export interface CandleStickObject {
@@ -166,7 +166,8 @@ export interface TradeOptions {
 }
 
 export interface DataSource {
-  type: DataSource
+  name: string;
+  type: DataSourceType
   data: any[]
 }
 

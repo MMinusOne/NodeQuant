@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import {
   BacktestResults,
+  DataSourceType,
   SimulationOptions,
   StrategyOptions,
   TimeFrame,
@@ -93,6 +94,10 @@ export class Strategy {
       profitFactor: 0,
       sharpeE: 0,
       tradeCount: 0,
+      reportData: {
+        data: [],
+        trades: [],
+      },
     }
 
     await Promise.all([this.internalStart(), this.onStart(this.data)])
@@ -106,6 +111,8 @@ export class Strategy {
 
     const tradeHistory = this.tradeManager.getTradeHistory()
     results.tradeCount = tradeHistory.length
+
+    results.reportData.trades = tradeHistory
 
     if (tradeHistory.length === 0) {
       return results
@@ -157,6 +164,20 @@ export class Strategy {
       riskFreeRate,
       standardDeviation,
     )
+
+    results.reportData.data.push({
+      name: this.pairDataPath,
+      type: DataSourceType.PRICE,
+      data: this.data,
+    })
+
+    this.indicators.forEach((indicatorData, indicatorKey) => {
+      results.reportData.data.push({
+        name: indicatorKey,
+        type: DataSourceType.FACTOR,
+        data: indicatorData,
+      })
+    })
 
     return results
   }
