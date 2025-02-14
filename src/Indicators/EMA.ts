@@ -3,14 +3,14 @@ import ta from 'technicalindicators'
 
 export class EMA extends Indicator {
   public period: number = 9
-  constructor(key: string, period: number) {
+  constructor(key: string, options: EMAOptions) {
     super({
       name: 'EMA',
       key: key,
       description: 'Exponential Moving Average.',
     })
 
-    this.period = period
+    if(options.period) this.period = options.period
   }
 
   generate(): number[] {
@@ -25,4 +25,8 @@ export class EMA extends Indicator {
 
     return ema
   }
+}
+
+export interface EMAOptions {
+  period?: number
 }

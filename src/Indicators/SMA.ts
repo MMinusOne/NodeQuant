@@ -3,14 +3,14 @@ import ta from 'technicalindicators'
 
 export class SMA extends Indicator {
   public period: number = 9
-  constructor(key: string, period: number) {
+  constructor(key: string, options: SMAOptions) {
     super({
       name: 'SMA',
       key: key,
       description: 'Simple Moving Average.',
     })
 
-    this.period = period
+    if(options.period) this.period = options.period
   }
 
   generate(): number[] {
@@ -25,4 +25,8 @@ export class SMA extends Indicator {
 
     return sma
   }
+}
+
+export interface SMAOptions {
+  period?: number
 }

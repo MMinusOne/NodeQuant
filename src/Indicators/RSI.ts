@@ -2,15 +2,15 @@ import { Indicator } from '@/lib/Indicator'
 import ta from 'technicalindicators'
 
 export class RSI extends Indicator {
-  public period: number = 9
-  constructor(key: string, period: number) {
+  public period: number = 14
+  constructor(key: string, options: RSIOptions) {
     super({
       name: 'RSI',
       key: key,
-      description: 'Simple Moving Average.',
+      description: 'Relative Strength Index.',
     })
 
-    this.period = period
+    if(options.period) this.period = options.period
   }
 
   generate(): number[] {
@@ -25,4 +25,8 @@ export class RSI extends Indicator {
 
     return rsi
   }
+}
+
+export interface RSIOptions {
+  period?: number
 }

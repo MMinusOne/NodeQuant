@@ -3,15 +3,15 @@ import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
 export class ATR extends Indicator {
-  public period: number = 9
-  constructor(key: string, period: number) {
+  public period: number = 14
+  constructor(key: string, options: ATROptions) {
     super({
       name: 'ATR',
       key: key,
-      description: 'Simple Moving Average.',
+      description: 'Average True Range.',
     })
 
-    this.period = period
+    if(options.period) this.period = options.period
   }
 
   generate(): number[] {
@@ -26,4 +26,8 @@ export class ATR extends Indicator {
 
     return atr
   }
+}
+
+export interface ATROptions {
+  period?: number
 }
