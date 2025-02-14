@@ -1,4 +1,4 @@
-import { PositionType } from 'dist'
+import { PositionType } from '@/types'
 
 export function calcPL(
   currentClose: number,

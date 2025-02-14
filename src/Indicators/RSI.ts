@@ -1,13 +1,13 @@
 import { Indicator } from '@/lib/Indicator'
 import ta from 'technicalindicators'
 
-export class EMA extends Indicator {
+export class RSI extends Indicator {
   public period: number = 9
   constructor(key: string, period: number) {
     super({
-      name: 'EMA',
+      name: 'RSI',
       key: key,
-      description: 'Exponential Moving Average.',
+      description: 'Simple Moving Average.',
     })
 
     this.period = period
@@ -18,11 +18,11 @@ export class EMA extends Indicator {
       .map((update) => update[4])
       .filter((value): value is number => value !== undefined)
 
-    const ema = ta.EMA.calculate({
+    const rsi = ta.RSI.calculate({
       period: this.period,
       values: values,
     })
 
-    return ema
+    return rsi
   }
 }

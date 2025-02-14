@@ -166,7 +166,9 @@ export class Strategy {
     )
 
     results.reportData.data.push({
-      name: this.pairDataPath,
+      name: `${this.strategyOptions.pair.replaceAll('/', '_')}_${
+        this.strategyOptions.timeFrame
+      }`,
       type: DataSourceType.PRICE,
       data: this.data,
     })
