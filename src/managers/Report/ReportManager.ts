@@ -56,32 +56,48 @@ export class ReportManager {
 
     const { trades } = backtestResults.reportData
 
+    // Calculate cumulative equity curve
+    let runningEquity = 0
+    const equityCurve = trades.map(trade => {
+      runningEquity += (trade.getData()[TRADE_KEY.PL] || 0)
+      return runningEquity
+    })
+
     equityGraph
       .setWidth(800)
       .setHeight(400)
       .setConfig({
         type: 'line',
         data: {
-          labels: trades.map((e, i) => i),
+          labels: trades.map((_, i) => i + 1), // Start from trade #1
           datasets: [
             {
-              label: 'Equity',
-              data: trades.map((trade, tradeIndex) => {
-                const previous = trades.toSpliced(tradeIndex, trades.length)
-
-                const previousPLs = previous.reduce((acc, trade) => {
-                  return acc + (trade.getData()[TRADE_KEY.PL] || 0);
-                }, 0);
-                
-                return previousPLs
-              }),
+              label: 'Equity Curve',
+              data: equityCurve,
               fill: false,
               borderColor: 'rgb(81, 75, 192)',
+              tension: 0.1 // Slightly smooth the line
             },
           ],
         },
+        options: {
+          scales: {
+            y: {
+              title: {
+                display: true,
+                text: 'Cumulative Profit/Loss'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Trade Number'
+              }
+            }
+          }
+        }
       })
 
-      equityGraph.toFile(reportPath.concat(`/equity_curve.png`))
+    equityGraph.toFile(reportPath.concat(`/equity_curve.png`))
   }
 }

@@ -38,7 +38,7 @@
   "dependencies": {
     "ccxt": "^4.4.53",
     "chalk": "^5.4.1",
-    "quickchart-js": "^3.1.0",
+    "quickchart-js": "^2.0.3",
     "technicalindicators": "^3.1.0"
   }
 }
