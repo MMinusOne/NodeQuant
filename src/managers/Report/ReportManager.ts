@@ -12,7 +12,7 @@ export class ReportManager {
   private readonly viewsPath: string
 
   constructor() {
-    this.viewsPath = path.join(process.cwd(), 'views')
+    this.viewsPath = new URL('./', import.meta.url).pathname
     this.initializeApp()
   }
 
@@ -46,7 +46,8 @@ export class ReportManager {
       res.json(trades)
     })
     reportRouter.get('/', (_, res) => {
-      res.sendFile(path.join(this.viewsPath, 'build/index.html'))
+      const buildPath = path.join(this.viewsPath, 'build/index.html').replace('\\C', 'C')
+      res.sendFile(buildPath)
     })
 
     this.app.use(`/${reportId}`, reportRouter)
