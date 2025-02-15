@@ -1,103 +1,58 @@
-import path from 'path'
-import fs from 'fs'
-import { BacktestResults, DataSource } from '@/types'
+import Express from 'express'
+import { BacktestResults, DataSource, DataSourceType } from '@/types'
 import { generateMD5Id } from '@/utils/generateId'
 import QuickChart from 'quickchart-js'
 import { TRADE_KEY } from '@/types'
+import path from 'path'
+import { Strategy } from '@/lib'
 
 export class ReportManager {
-  private reportsDirectory: string = path.join(process.cwd(), 'reports')
+  private readonly app = Express()
+  private readonly PORT = 2555
+  private readonly viewsPath: string
 
   constructor() {
-    this.createReportsDirectory()
+    this.viewsPath = path.join(process.cwd(), 'views')
+    this.initializeApp()
   }
 
-  private createReportsDirectory() {
-    if (!fs.existsSync(this.reportsDirectory)) {
-      fs.mkdirSync(this.reportsDirectory)
-    }
+  private initializeApp() {
+    this.app.use(Express.json())
+    this.app.set('views', this.viewsPath)
+    this.app.use(Express.static(this.viewsPath))
+    this.app.listen(this.PORT, () => {
+      console.log(`Report server listening on port ${this.PORT}`)
+    })
   }
 
-  private installReportDirectory(reportData: BacktestResults['reportData']) {
+  public generateReport(
+    strategy: Strategy,
+    reportData: BacktestResults['reportData'],
+  ) {
     const reportId = generateMD5Id()
-    const reportPath = this.reportsDirectory.concat(`/`).concat(reportId)
+    const { trades, data } = reportData
+    const reportRouter = Express.Router()
 
-    const registar: {
-      dataSources: string[]
-      trades: string
-    } = {
-      dataSources: [],
-      trades: reportPath.concat('/').concat('trades.json'),
-    }
+    const priceData = data.filter((e) => e.type === DataSourceType.PRICE)
+    const factorData = data.filter((e) => e.type === DataSourceType.FACTOR)
 
-    fs.mkdirSync(reportPath)
-
-    for (const dataSource of reportData.data) {
-      const dataSourcePath = reportPath
-        .concat('/')
-        .concat(dataSource.name.concat('.json'))
-      registar.dataSources.push(dataSourcePath)
-      fs.writeFileSync(dataSourcePath, JSON.stringify(dataSource))
-    }
-
-    fs.writeFileSync(registar.trades, JSON.stringify(reportData.trades))
-
-    fs.writeFileSync(
-      reportPath.concat('/registar.json'),
-      JSON.stringify(registar),
-    )
-    return reportPath
-  }
-
-  public generateReport(backtestResults: BacktestResults) {
-    const reportPath = this.installReportDirectory(backtestResults.reportData)
-
-    const equityGraph = new QuickChart()
-
-    const { trades } = backtestResults.reportData
-
-    // Calculate cumulative equity curve
-    let runningEquity = 0
-    const equityCurve = trades.map(trade => {
-      runningEquity += (trade.getData()[TRADE_KEY.PL] || 0)
-      return runningEquity
+    reportRouter.get('/price-data', (_, res) => {
+      res.json(priceData)
+    })
+    reportRouter.get('/factor-data', (_, res) => {
+      res.json(factorData)
+    })
+    reportRouter.get('/trade-data', (_, res) => {
+      res.json(trades)
+    })
+    reportRouter.get('/', (_, res) => {
+      res.sendFile(path.join(this.viewsPath, 'build/index.html'))
     })
 
-    equityGraph
-      .setWidth(800)
-      .setHeight(400)
-      .setConfig({
-        type: 'line',
-        data: {
-          labels: trades.map((_, i) => i + 1), // Start from trade #1
-          datasets: [
-            {
-              label: 'Equity Curve',
-              data: equityCurve,
-              fill: false,
-              borderColor: 'rgb(81, 75, 192)',
-              tension: 0.1 // Slightly smooth the line
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              title: {
-                display: true,
-                text: 'Cumulative Profit/Loss'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Trade Number'
-              }
-            }
-          }
-        }
-      })
+    this.app.use(`/${reportId}`, reportRouter)
 
-    equityGraph.toFile(reportPath.concat(`/equity_curve.png`))
+    console.log(
+      `Report for ${strategy.name}: http://localhost:${this.PORT}/${reportId}`,
+    )
   }
 }

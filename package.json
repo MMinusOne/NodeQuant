@@ -32,12 +32,17 @@
   ],
   "homepage": "https://github.com/MMinusOne/Node-Quant#readme",
   "devDependencies": {
+    "@types/express": "^5.0.0",
+    "parcel": "^2.13.3",
+    "path-browserify": "^1.0.1",
     "tsup": "^8.3.6",
     "typescript": "^5.7.3"
   },
   "dependencies": {
     "ccxt": "^4.4.53",
     "chalk": "^5.4.1",
+    "express": "^4.21.2",
+    "lightweight-charts": "^5.0.2",
     "quickchart-js": "^2.0.3",
     "technicalindicators": "^3.1.0"
   }

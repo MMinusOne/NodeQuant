@@ -24,6 +24,7 @@ import {
 import getAvgMarketReturn from '@/utils/getAvgMarketReturn'
 
 export class Strategy {
+  public name: string;
   private data: OHLCV[] = []
   public readonly strategyOptions: Required<StrategyOptions>
   public tradeManager: TradeManager
@@ -41,6 +42,8 @@ export class Strategy {
       pair,
     } = strategyOptions
 
+    this.name = strategyOptions.name;
+    
     this.strategyOptions = {
       name,
       dataLength,
