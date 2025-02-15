@@ -1,14 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en" class="w-full h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Performance Report</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <script defer src="script.js" type="module"></script>
-</head>
-<body class="w-full h-full">
+  </head>
+  <body class="w-full h-full">
     <div class="bg-slate-900 w-full h-full" id="chart-container"></div>
     <div class="bg-slate-800 w-full h-1/2"></div>
-</body>
+
+    <script type="module">
+      import { CandlestickSeries, createChart } from 'lightweight-charts'
+
+      const chartContainer = document.querySelector('#chart-container')
+
+      const reportId = window.location.toString().split('/').at(-1)
+
+      async function chart() {
+        const chart = createChart(chartContainer, {
+          width: chartContainer.clientWidth,
+          height: chartContainer.clientHeight,
+        })
+
+        const response = await fetch(
+          `http://localhost:2555/${reportId}/price-data`,
+        ).then((r) => r.json())
+
+        for (const dataSource of response) {
+          const { name, type, data: candles } = dataSource
+          const candleStickSeries = chart.addSeries(CandlestickSeries)
+          candleStickSeries.setData(
+            candles.map((candle) => {
+              return {
+                open: candle.at(1),
+                high: candle.at(2),
+                low: candle.at(3),
+                close: candle.at(4),
+                time: candle.at(0),
+              }
+            }),
+          )
+        }
+
+        chart.timeScale().fitContent()
+      }
+
+      chart()
+    </script>
+  </body>
 </html>
