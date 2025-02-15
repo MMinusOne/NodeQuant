@@ -11,7 +11,11 @@
     <div class="bg-slate-800 w-full h-1/2"></div>
 
     <script type="module">
-      import { CandlestickSeries, createChart } from 'lightweight-charts'
+      import {
+        CandlestickSeries,
+        createChart,
+        LineSeries,
+      } from 'lightweight-charts'
 
       const chartContainer = document.querySelector('#chart-container')
 
@@ -21,15 +25,17 @@
         const chart = createChart(chartContainer, {
           width: chartContainer.clientWidth,
           height: chartContainer.clientHeight,
+          layout: { background: { type: 'solid', color: '#1c1917' } },
         })
 
-        const response = await fetch(
+        const priceDataResponse = await fetch(
           `http://localhost:2555/${reportId}/price-data`,
         ).then((r) => r.json())
 
-        for (const dataSource of response) {
+        for (const dataSource of priceDataResponse) {
           const { name, type, data: candles } = dataSource
           const candleStickSeries = chart.addSeries(CandlestickSeries)
+
           candleStickSeries.setData(
             candles.map((candle) => {
               return {
@@ -38,6 +44,24 @@
                 low: candle.at(3),
                 close: candle.at(4),
                 time: candle.at(0),
+              }
+            }),
+          )
+        }
+
+        const factorDataResponse = await fetch(
+          `http://localhost:2555/${reportId}/factor-data`,
+        ).then((r) => r.json())
+
+        for (const dataSource of factorDataResponse) {
+          const { name, type, data } = dataSource
+          const lineSeries = chart.addSeries(LineSeries)
+
+          lineSeries.setData(
+            data.map((cell, cellIndex) => {
+              return {
+                time: priceDataResponse.at(0).data.at(cellIndex)[0],
+                value: cell,
               }
             }),
           )
