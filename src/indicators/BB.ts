@@ -5,7 +5,8 @@ import { BollingerBandsOutput } from 'technicalindicators/declarations/volatilit
 export class BB extends Indicator {
   public period: number = 9
   public stdDev: number = 1
-  constructor(key: string, options: EMAOptions) {
+  
+  constructor(key: string, options: BBOptions) {
     super({
       name: 'Bollinger Bands',
       key: key,
@@ -13,6 +14,7 @@ export class BB extends Indicator {
     })
 
     if (options.period) this.period = options.period
+    if (options.stdDev) this.stdDev = options.stdDev
   }
 
   generate(): BollingerBandsOutput[] {
@@ -30,6 +32,7 @@ export class BB extends Indicator {
   }
 }
 
-export interface EMAOptions {
+export interface BBOptions {
   period?: number
+  stdDev?: number
 }
