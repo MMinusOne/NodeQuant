@@ -44,6 +44,7 @@
     "express": "^4.21.2",
     "lightweight-charts": "^5.0.2",
     "quickchart-js": "^2.0.3",
-    "technicalindicators": "^3.1.0"
+    "technicalindicators": "^3.1.0",
+    "webpack": "^5.98.0"
   }
 }

@@ -1,8 +1,6 @@
 import Express from 'express'
 import { BacktestResults, DataSource, DataSourceType } from '@/types'
 import { generateMD5Id } from '@/utils/generateId'
-import QuickChart from 'quickchart-js'
-import { TRADE_KEY } from '@/types'
 import path from 'path'
 import { Strategy } from '@/lib'
 

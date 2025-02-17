@@ -1,0 +1,35 @@
+import { Indicator } from '@/lib/Indicator'
+import ta from 'technicalindicators'
+import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
+
+export class BB extends Indicator {
+  public period: number = 9
+  public stdDev: number = 1
+  constructor(key: string, options: EMAOptions) {
+    super({
+      name: 'Bollinger Bands',
+      key: key,
+      description: 'Boillinger Bands.',
+    })
+
+    if (options.period) this.period = options.period
+  }
+
+  generate(): BollingerBandsOutput[] {
+    const values = this.data
+      .map((update) => update[4])
+      .filter((value): value is number => value !== undefined)
+
+    const bb = ta.BollingerBands.calculate({
+      values,
+      period: this.period,
+      stdDev: this.stdDev,
+    })
+
+    return bb
+  }
+}
+
+export interface EMAOptions {
+  period?: number
+}
