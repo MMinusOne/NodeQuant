@@ -2,8 +2,6 @@ import { Indicator } from '@/lib/Indicator'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 import { IchimokuCloudOutput } from 'technicalindicators/declarations/ichimoku/IchimokuCloud'
-import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
-import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
 
 export class IchimokuCloud extends Indicator {
   public basePeriod: number = 9

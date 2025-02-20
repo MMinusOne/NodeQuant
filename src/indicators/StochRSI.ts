@@ -1,7 +1,6 @@
 import { Indicator } from '@/lib/Indicator'
 import ta from 'technicalindicators'
 import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
-import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
 
 export class StockRSI extends Indicator {
   public dPeriod: number = 9
