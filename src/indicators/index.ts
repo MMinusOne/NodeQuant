@@ -10,3 +10,4 @@ export * from './WEMA'
 export * from './ADX'
 export * from './VolumeProfile'
 export * from './VWAP';
+export * from './ForceIndex';
