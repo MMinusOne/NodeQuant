@@ -4,12 +4,15 @@ import { ChartingSystem } from '@/lib'
 import { HeikinAshiInput } from 'technicalindicators/declarations/chart_types/HeikinAshi'
 import ta from 'technicalindicators'
 
-export class HeikenAishi extends ChartingSystem {
-  public options: Omit<HeikinAshiInput, 'low' | 'close' | 'high' | 'open'>
+type HeikenAishiOptions = Omit<
+  HeikinAshiInput,
+  'low' | 'close' | 'high' | 'open'
+>
 
-  constructor(
-    options: Omit<HeikinAshiInput, 'low' | 'close' | 'high' | 'open'>,
-  ) {
+export class HeikenAishi extends ChartingSystem {
+  public options: HeikenAishiOptions
+
+  constructor(options: HeikenAishiOptions) {
     super()
     this.options = options
   }

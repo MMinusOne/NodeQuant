@@ -4,10 +4,12 @@ import { ChartingSystem } from '@/lib'
 import ta from 'technicalindicators'
 import { RenkoInput } from 'technicalindicators/declarations/chart_types/Renko'
 
-export class Renko extends ChartingSystem {
-  public options: Omit<RenkoInput, 'low' | 'close' | 'high' | 'open'>
+type RenkoOptions = Omit<RenkoInput, 'low' | 'close' | 'high' | 'open'>
 
-  constructor(options: Omit<RenkoInput, 'low' | 'close' | 'high' | 'open'>) {
+export class Renko extends ChartingSystem {
+  public options: RenkoOptions
+
+  constructor(options: RenkoOptions) {
     super()
     this.options = options
   }
