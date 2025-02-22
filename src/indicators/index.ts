@@ -12,3 +12,4 @@ export * from './VolumeProfile'
 export * from './VWAP';
 export * from './ForceIndex';
 export * from './ADL';
+export * from './AwesomeOscillator';
