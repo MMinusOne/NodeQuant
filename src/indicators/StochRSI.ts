@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import ta from 'technicalindicators'
 import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
 
@@ -33,6 +34,7 @@ export class StockRSI extends Indicator {
       kPeriod: this.kPeriod,
       rsiPeriod: this.rsiPeriod,
       stochasticPeriod: this.stochasticPeriod,
+      format: noValueCheck,
     })
 
     return stochRSI

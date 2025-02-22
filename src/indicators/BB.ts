@@ -1,11 +1,12 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import ta from 'technicalindicators'
 import { BollingerBandsOutput } from 'technicalindicators/declarations/volatility/BollingerBands'
 
 export class BB extends Indicator {
   public period: number = 9
   public stdDev: number = 1
-  
+
   constructor(key: string, options: BBOptions) {
     super({
       name: 'Bollinger Bands',
@@ -26,6 +27,7 @@ export class BB extends Indicator {
       values,
       period: this.period,
       stdDev: this.stdDev,
+      format: noValueCheck,
     })
 
     return bb

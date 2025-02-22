@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
@@ -21,6 +22,7 @@ export class VWAP extends Indicator {
       high: highs,
       low: lows,
       volume: volumes,
+      format: noValueCheck,
     })
 
     return vwap

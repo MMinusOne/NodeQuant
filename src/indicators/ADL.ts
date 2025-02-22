@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
@@ -20,6 +21,7 @@ export class ADL extends Indicator {
       close: closes,
       high: highs,
       low: lows,
+      format: noValueCheck,
     })
 
     return adl

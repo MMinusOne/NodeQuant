@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import ta from 'technicalindicators'
 
 export class EMA extends Indicator {
@@ -10,7 +11,7 @@ export class EMA extends Indicator {
       description: 'Exponential Moving Average.',
     })
 
-    if(options.period) this.period = options.period
+    if (options.period) this.period = options.period
   }
 
   generate(): number[] {
@@ -21,6 +22,7 @@ export class EMA extends Indicator {
     const ema = ta.EMA.calculate({
       period: this.period,
       values: values,
+      format: noValueCheck,
     })
 
     return ema

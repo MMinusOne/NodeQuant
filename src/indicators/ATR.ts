@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
@@ -11,7 +12,7 @@ export class ATR extends Indicator {
       description: 'Average True Range.',
     })
 
-    if(options.period) this.period = options.period
+    if (options.period) this.period = options.period
   }
 
   generate(): number[] {
@@ -22,6 +23,7 @@ export class ATR extends Indicator {
       high: highs,
       low: lows,
       close: closes,
+      format: noValueCheck,
     })
 
     return atr

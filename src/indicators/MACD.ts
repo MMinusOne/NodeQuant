@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import ta from 'technicalindicators'
 import { MACDOutput } from 'technicalindicators/declarations/moving_averages/MACD'
 
@@ -36,6 +37,7 @@ export class MACD extends Indicator {
       SimpleMASignal: this.MAType === 'SMA' ? true : false,
       signalPeriod: this.signalSmoothing,
       values: values,
+      format: noValueCheck,
     })
 
     return macd

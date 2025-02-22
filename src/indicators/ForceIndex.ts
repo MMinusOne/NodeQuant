@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
@@ -21,6 +22,7 @@ export class ForceIndex extends Indicator {
       period: this.period,
       close: closes,
       volume: volumes,
+      format: noValueCheck,
     })
 
     return forceIndex

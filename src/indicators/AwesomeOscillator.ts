@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
@@ -24,6 +25,7 @@ export class AwesomeOscillator extends Indicator {
       slowPeriod: this.slowPeriod,
       high: highs,
       low: lows,
+      format: noValueCheck,
     })
 
     return awesomeOscillator

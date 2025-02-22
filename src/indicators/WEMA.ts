@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import ta from 'technicalindicators'
 
 export class WEMA extends Indicator {
@@ -21,6 +22,7 @@ export class WEMA extends Indicator {
     const wema = ta.WEMA.calculate({
       period: this.period,
       values: values,
+      format: noValueCheck,
     })
 
     return wema

@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 import { IchimokuCloudOutput } from 'technicalindicators/declarations/ichimoku/IchimokuCloud'
@@ -32,6 +33,7 @@ export class IchimokuCloud extends Indicator {
       displacement: this.displacement,
       high: highs,
       low: lows,
+      format: noValueCheck,
     })
 
     return ichimoku

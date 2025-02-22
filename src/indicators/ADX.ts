@@ -1,4 +1,5 @@
 import { Indicator } from '@/lib/Indicator'
+import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 import { ADXOutput } from 'technicalindicators/declarations/directionalmovement/ADX'
@@ -23,6 +24,7 @@ export class ADX extends Indicator {
       close: closes,
       high: highs,
       low: lows,
+      format: noValueCheck,
     })
 
     return adx
