@@ -1,6 +1,6 @@
 {
   "name": "quant-zero",
-  "version": "1.2.0",
+  "version": "1.2.5",
   "description": "Node-Quant is a powerful Node.js package for developing and testing quantitative trading strategies in cryptocurrency markets, offering tools for backtesting and performance analysis.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "lint": "tsc && tsup --dts",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "npx parcel src/managers/report/views/performance/index.html && tsup src/index.ts --format cjs,esm --dts",
     "test": "node src/test.ts",
     "update-package": "npm run build && npm publish"
   },

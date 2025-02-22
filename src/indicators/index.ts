@@ -11,3 +11,4 @@ export * from './ADX'
 export * from './VolumeProfile'
 export * from './VWAP';
 export * from './ForceIndex';
+export * from './ADL';

@@ -1,2 +1,2 @@
 export * from './TradeManager'
-export * from './Report/ReportManager'
+export * from './report/ReportManager'
