@@ -3,7 +3,6 @@ import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 import { StochasticOutput } from 'technicalindicators/declarations/momentum/Stochastic'
-import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
 
 export class StockRSI extends Indicator {
   public period: number = 12;
