@@ -166,7 +166,7 @@ export interface TradeOptions {
 }
 
 export interface DataSource {
-  name: string;
+  name: string
   type: DataSourceType
   data: any[]
 }
@@ -174,6 +174,10 @@ export interface DataSource {
 export enum DataSourceType {
   PRICE = 'price',
   FACTOR = 'factor',
+}
+
+export interface ChartingOptions {
+  type: 'bar' | 'line' | 'area' | 'histogram' | 'candlestick' | 'baseline'
 }
 
 export enum TimeFrame {
