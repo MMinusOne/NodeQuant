@@ -9,11 +9,11 @@ export class StockRSI extends Indicator {
   public rsiPeriod: number = 14
   public stochasticPeriod: number = 16
 
-  constructor(key: string, options: StockRSIOptions) {
+  constructor(key: string, options: StochRSIOptions) {
     super({
-      name: 'Bollinger Bands',
+      name: 'StochRSI',
       key: key,
-      description: 'Boillinger Bands.',
+      description: 'Stochastic RSI.',
     })
 
     if (options.dPeriod) this.dPeriod = options.dPeriod
@@ -41,7 +41,7 @@ export class StockRSI extends Indicator {
   }
 }
 
-export interface StockRSIOptions {
+export interface StochRSIOptions {
   dPeriod: number
   kPeriod: number
   rsiPeriod: number
