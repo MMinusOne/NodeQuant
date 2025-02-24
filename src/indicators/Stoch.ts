@@ -12,7 +12,7 @@ export class StockRSI extends Indicator {
     super({
       name: 'Stochastic',
       key: key,
-      description: 'Stochastic.',
+      description: 'Stochastic Indicator.',
     })
 
     if (options.period) this.period = options.period
