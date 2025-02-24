@@ -4,7 +4,6 @@ import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 
 export class ADL extends Indicator {
-
   constructor(key: string) {
     super({
       name: 'ADL',

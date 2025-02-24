@@ -177,7 +177,8 @@ export enum DataSourceType {
 }
 
 export interface ChartingOptions {
-  type: 'bar' | 'line' | 'area' | 'histogram' | 'candlestick' | 'baseline'
+  type: 'bar' | 'line' | 'area' | 'histogram' | 'candlestick' | 'baseline';
+  color: string;
 }
 
 export enum TimeFrame {
