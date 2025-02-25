@@ -44,7 +44,9 @@ export class ReportManager {
       res.json(trades)
     })
     reportRouter.get('/', (_, res) => {
-      const buildPath = path.join(this.viewsPath, 'performance/dist/index.html').replace('\\C', 'C')
+      const buildPath = path
+        .join(this.viewsPath, 'performance/dist/index.html')
+        .replace('\\C', 'C')
       res.sendFile(buildPath)
     })
 
