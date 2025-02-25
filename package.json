@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "lint": "tsc && tsup --dts",
-    "build": "npx parcel src/managers/report/views/performance/index.html && tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
     "test": "node src/test.ts",
     "update-package": "npm run build && npm publish"
   },
@@ -31,20 +31,25 @@
     "Analysis"
   ],
   "homepage": "https://github.com/MMinusOne/Node-Quant#readme",
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "parcel": "^2.13.3",
-    "path-browserify": "^1.0.1",
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3"
-  },
   "dependencies": {
     "ccxt": "^4.4.53",
     "chalk": "^5.4.1",
     "express": "^4.21.2",
     "lightweight-charts": "^5.0.2",
+    "memory-fs": "^0.5.0",
     "quickchart-js": "^2.0.3",
     "technicalindicators": "^3.1.0",
-    "webpack": "^5.98.0"
+    "webpack": "^5.98.0",
+    "webpack-dev-middleware": "^7.4.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/memory-fs": "^0.3.7",
+    "@types/webpack-hot-middleware": "^2.25.9",
+    "parcel": "^2.13.3",
+    "path-browserify": "^1.0.1",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "webpack-hot-middleware": "^2.26.1"
   }
 }
