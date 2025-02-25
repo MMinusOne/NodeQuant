@@ -1,3 +1,4 @@
+import { PositionManager } from '@/managers/PositionManager'
 import {
   NumberReturnType,
   TradeData,
@@ -11,7 +12,8 @@ import { OHLCV } from 'ccxt'
 
 export class Trade {
   public readonly id: string
-  private readonly tradeData: Map<TRADE_KEY, any>
+  public positionManager: PositionManager = new PositionManager(this)
+  public readonly tradeData: Map<TRADE_KEY, any>
 
   constructor(options: TradeOptions) {
     this.id = generateMD5Id()
@@ -44,14 +46,6 @@ export class Trade {
 
   public close(): void {
     this.tradeData.set(TRADE_KEY.isOpen, false)
-  }
-
-  public updateTP(TP?: number): void {
-    this.tradeData.set(TRADE_KEY.TP, TP)
-  }
-
-  public updateSL(SL?: number): void {
-    this.tradeData.set(TRADE_KEY.SL, SL)
   }
 
   public getData(): TradeData {
