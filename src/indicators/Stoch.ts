@@ -3,11 +3,10 @@ import noValueCheck from '@/utils/noValueCheck'
 import { parseIntoRows } from '@/utils/parseOHLCV'
 import ta from 'technicalindicators'
 import { StochasticOutput } from 'technicalindicators/declarations/momentum/Stochastic'
-import { StochasticRSIOutput } from 'technicalindicators/declarations/momentum/StochasticRSI'
 
 export class StockRSI extends Indicator {
-  public period: number = 12;
-  public signalPeriod: number = 26;
+  public period: number = 12
+  public signalPeriod: number = 26
 
   constructor(key: string, options: StochOptions) {
     super({
@@ -21,7 +20,7 @@ export class StockRSI extends Indicator {
   }
 
   generate(): StochasticOutput[] {
-    const { closes, highs, lows } = parseIntoRows(this.data);
+    const { closes, highs, lows } = parseIntoRows(this.data)
 
     const stoch = ta.Stochastic.calculate({
       close: closes,
@@ -37,6 +36,6 @@ export class StockRSI extends Indicator {
 }
 
 export interface StochOptions {
-  period: number;
-  signalPeriod: number;
+  period: number
+  signalPeriod: number
 }
