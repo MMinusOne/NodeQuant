@@ -7,15 +7,17 @@ export class PositionManager {
     this.trade = trade
   }
 
-    public updateTP(TP?: number): void {
-      this.trade.tradeData.set(TRADE_KEY.TP, TP)
-    }
-  
-    public updateSL(SL?: number): void {
-      this.trade.tradeData.set(TRADE_KEY.SL, SL)
-    }
+  public updateTP(TP?: number): void {
+    this.trade.tradeData.set(TRADE_KEY.TP, TP)
+  }
 
-    public cut() { }
+  public updateSL(SL?: number): void {
+    this.trade.tradeData.set(TRADE_KEY.SL, SL)
+  }
 
-    public add() { }
+  public setRR(R: number, risk: number) {
+    const reward = risk * R
+    this.updateTP(reward)
+    this.updateSL(risk)
+  }
 }
