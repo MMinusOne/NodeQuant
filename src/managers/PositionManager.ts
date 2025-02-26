@@ -20,4 +20,11 @@ export class PositionManager {
     this.updateTP(reward)
     this.updateSL(risk)
   }
+
+  public setSLBreakeven(offset: number = 0) {
+    this.trade.tradeData.set(
+      TRADE_KEY.SL,
+      this.trade.tradeData.get(TRADE_KEY.openPrice) + offset,
+    )
+  }
 }
