@@ -19,7 +19,7 @@ export class MFI extends Indicator {
   generate(): number[] {
     const { closes, highs, lows, volumes } = parseIntoRows(this.data)
 
-    const adl = ta.MFI.calculate({
+    const mfi = ta.MFI.calculate({
       volume: volumes,
       close: closes,
       high: highs,
@@ -28,7 +28,7 @@ export class MFI extends Indicator {
       format: noValueCheck,
     })
 
-    return adl
+    return mfi
   }
 }
 
